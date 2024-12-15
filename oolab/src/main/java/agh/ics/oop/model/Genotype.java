@@ -4,6 +4,7 @@ import agh.ics.oop.model.enums.GenomeVariant;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static java.lang.Math.round;
 
@@ -45,6 +46,16 @@ public class Genotype {
                     setCurrentGenomeIndex(this.currentGenomeIndex+1 % genomeSize);
                 }
             }
+        }
+    }
+
+    public void mutate(){
+        Random random = new Random();
+        int mutateNumber = random.nextInt(genomeSize);
+        for (int i = 0; i < mutateNumber; i++){
+            int index = random.nextInt(genomeSize);
+            int value = random.nextInt(8);
+            this.genome.set(index, value);
         }
     }
 }
