@@ -1,5 +1,6 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.enums.GenomeVariant;
 import agh.ics.oop.model.interfaces.WorldMap;
 
 import java.util.List;
@@ -9,7 +10,7 @@ public class Animal {
     private Vector2d position;
     private int energy;
     private Genotype genotype;
-
+    private static GenomeVariant genomeVariant;
 
     public Animal(int direction, Vector2d position, int energy, Genotype genotype) {
         this.direction = direction;
@@ -31,7 +32,7 @@ public class Animal {
         currentDirection %= 8;
         this.direction = currentDirection;
         moveInDirection(map);
-        genotype.setCurrentGenomeIndex((currentGenotypeIndex + 1) % genotype.getGenome().size());
+        genotype.indexChange(genomeVariant);
         this.energy -= 1;
     }
 

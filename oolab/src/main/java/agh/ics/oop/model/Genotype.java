@@ -1,5 +1,7 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.enums.GenomeVariant;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,5 +30,21 @@ public class Genotype {
 
     public int getCurrentGenomeIndex() {
         return currentGenomeIndex;
+    }
+
+    public void indexChange(GenomeVariant variant){
+        switch (variant){
+            case NORMAL -> {
+                setCurrentGenomeIndex(this.currentGenomeIndex+1 % genomeSize);
+            }
+            case CRAZY -> {
+                if(Math.random() <= 0.2){
+                    setCurrentGenomeIndex((int) round(Math.random()*genomeSize));
+                }
+                else{
+                    setCurrentGenomeIndex(this.currentGenomeIndex+1 % genomeSize);
+                }
+            }
+        }
     }
 }
