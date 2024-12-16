@@ -1,4 +1,4 @@
-package agh.ics.oop.model;
+package agh.ics.oop.model.elements;
 
 import agh.ics.oop.model.enums.GenomeVariant;
 

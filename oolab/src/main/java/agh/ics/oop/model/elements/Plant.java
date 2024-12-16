@@ -1,4 +1,7 @@
-package agh.ics.oop.model;
+package agh.ics.oop.model.elements;
+
+import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.interfaces.WorldElement;
 
 public class Plant implements WorldElement {
     private Vector2d position;

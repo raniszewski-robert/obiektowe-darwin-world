@@ -1,9 +1,8 @@
-package agh.ics.oop.model;
+package agh.ics.oop.model.elements;
 
+import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.enums.GenomeVariant;
 import agh.ics.oop.model.interfaces.WorldMap;
-
-import java.util.List;
 
 public class Animal {
     private int direction;

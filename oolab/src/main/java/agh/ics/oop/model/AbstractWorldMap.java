@@ -1,5 +1,10 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.elements.Animal;
+import agh.ics.oop.model.elements.Plant;
+import agh.ics.oop.model.interfaces.WorldElement;
+import agh.ics.oop.model.interfaces.WorldMap;
+
 import java.util.*;
 
 public abstract class AbstractWorldMap implements WorldMap {
@@ -33,7 +38,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     @Override
-    public Object objectAt(Vector2d position) {
+    public WorldElement objectAt(Vector2d position) {
         return null;
     }
 
