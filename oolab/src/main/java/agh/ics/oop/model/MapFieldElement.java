@@ -6,12 +6,12 @@ import agh.ics.oop.model.elements.Plant;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
-public class WorldElement {
+public class MapFieldElement {
 
     private Plant plant;
     private PriorityQueue<Animal> animals;
 
-    public WorldElement(Plant plant) {
+    public MapFieldElement() {
         this.plant = null;
         this.animals = new PriorityQueue<>(Comparator.comparingInt(Animal::getEnergy).reversed());
     }

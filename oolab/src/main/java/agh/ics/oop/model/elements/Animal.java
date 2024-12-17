@@ -22,6 +22,14 @@ public class Animal {
         return energy <= 0;
     }
 
+    public int getEnergy() {
+        return energy;
+    }
+
+    public void setEnergy(int energy) {
+        this.energy = energy;
+    }
+
     public void move(WorldMap map){
         int currentDirection = this.direction;
         int currentGenotypeIndex = genotype.getCurrentGenomeIndex();
