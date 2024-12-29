@@ -9,7 +9,6 @@ public class Plant{
         this.position = position;
     }
 
-
     public Vector2d getPosition() {
         return null;
     }

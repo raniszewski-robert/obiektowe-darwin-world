@@ -28,5 +28,8 @@ public class MapFieldElement {
     public void removePlant(){
         this.plant = null;
     }
-
+    public boolean hasPlant() {return this.plant != null;}
+    public Plant getPlant() {return this.plant;}
+    public PriorityQueue<Animal> getAnimalsAsQueue() {return this.animals;}
+    public void setPlant(Plant plant) {this.plant = plant;}
 }
