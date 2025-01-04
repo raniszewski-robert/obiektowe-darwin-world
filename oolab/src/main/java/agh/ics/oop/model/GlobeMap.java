@@ -1,5 +1,11 @@
 package agh.ics.oop.model;
 
-public class GlobeMap {
+import java.util.AbstractMap;
+
+public class GlobeMap extends AbstractWorldMap {
+
+    protected GlobeMap(int width, int height) {
+        super(width, height);
+    }
 
 }

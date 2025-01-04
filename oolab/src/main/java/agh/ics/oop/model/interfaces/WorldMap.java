@@ -10,6 +10,6 @@ public interface WorldMap {
     MapFieldElement objectAt(Vector2d position);
     boolean isOccupied(Vector2d position);
     Boundary getCurrentBounds();
-
+    boolean isInMap(Vector2d position);
 }
 
