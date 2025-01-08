@@ -39,4 +39,5 @@ public class MapFieldElement {
     public List<Animal> getAnimals() {return List.copyOf(animals);}
     public void addFire(Fire fire) {this.fire = fire;}
     public void removeFire() {this.fire = null;}
+    public boolean onFire() {return this.fire != null;}
 }
