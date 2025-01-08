@@ -55,6 +55,10 @@ public class Square {
         this.element.setPlant(plant);
     }
 
+    public boolean onFire() {
+        return this.element.onFire();
+    }
+
     public void removeFire() {
         this.element.removeFire();
     }

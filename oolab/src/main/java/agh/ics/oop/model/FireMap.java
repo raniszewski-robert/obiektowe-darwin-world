@@ -23,7 +23,7 @@ public class FireMap extends AbstractWorldMap{
 
             for (Vector2d neighbor : neighbors) {
                 Square square = mapSquares.get(position);
-                if (square != null && square.getPlant() != null) {
+                if (square != null && square.hasPlant() && !square.onFire()) {
                     newFires.add(new Fire(neighbor, burnTime));
                 }
             }
