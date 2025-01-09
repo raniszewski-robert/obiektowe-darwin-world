@@ -31,7 +31,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         this.jungleUpperY = (int) (0.6 * height) - 1;
         this.lowerLeft = new Vector2d(0, 0);
         this.upperRight = new Vector2d(this.width-1, this.height-1);
-        Animal.setGenomeVariant(genomeVariant);
+        Genotype.setGenomeVariant(genomeVariant);
     }
 
     public Collection<Square> getAllSquares(){
@@ -140,14 +140,9 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     public void createAnimals(int numberOfAnimals, int genomeSize, int startEnergy) {
-        Random generator = new Random();
-
         for(int i = 0; i < numberOfAnimals; i++){
-
             Vector2d position = this.getRandomPosition();
-            int energy = startEnergy;
             Genotype genotype = new Genotype(genomeSize);
-            int age = 0;
             Animal newAnimal = new Animal(0, position, startEnergy, genotype);
             MapFieldElement newElement = new MapFieldElement();
             newElement.addAnimal(newAnimal);
@@ -178,7 +173,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
 
         Square oldSquare = this.mapSquares.get(animal.getPosition());
-        Vector2d oldPosition = animal.getPosition();
+
         animal.move(this);
         Vector2d newPosition = animal.getPosition();
 
@@ -220,32 +215,20 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
     }
 
-    public Animal copulation(Animal animal1, Animal animal2, int neededEnergy, int mutationNumber){
+    public void copulationAllAnimals(int energyAllowingCopulation){
+        for(Square square: this.mapSquares.values()){
+            if(square.getAnimals().size()>1){
+                PriorityQueue<Animal> currAnimals = new PriorityQueue<>(square.getElement().getAnimalsAsQueue());
+                currAnimals.removeIf(x -> x.getEnergy() < energyAllowingCopulation);
+                while(currAnimals.size() > 1){
+                    Animal firstParent = currAnimals.poll();
+                    Animal otherParent = currAnimals.poll();
+                    Animal child = firstParent.createChild(otherParent);
 
-        int sumOfEnergy = animal1.getEnergy() + animal2.getEnergy();
-        float energyPercent = (float) animal1.getEnergy() / sumOfEnergy;
-        animal1.setEnergy(animal1.getEnergy() - neededEnergy);
-        animal2.setEnergy(animal2.getEnergy() - neededEnergy);
-        int genomeSize = animal1.getGenotype().getGenomeSize();
-        int partIndex = (int)(energyPercent * genomeSize);
-        Genotype childGenotype = new Genotype(genomeSize);
-
-        double genomeSide = Math.random();
-        List<Integer> childGenome = new ArrayList<>();
-        if(genomeSide < 0.5){
-            childGenome.addAll(animal1.getGenotype().getGenome().subList(0, partIndex));
-            childGenome.addAll(animal2.getGenotype().getGenome().subList(partIndex, genomeSize));
+                    this.animals.add(child);
+                    square.addAnimal(child);
+                }
+            }
         }
-        else{
-            childGenome.addAll(animal2.getGenotype().getGenome().subList(0, partIndex));
-            childGenome.addAll(animal1.getGenotype().getGenome().subList(partIndex, genomeSize));
-        }
-        childGenotype.setGenome(childGenome);
-        childGenotype.mutate();
-
-        animal1.setChildrenCount(animal1.getChildrenCount() + 1);
-        animal2.setChildrenCount(animal2.getChildrenCount() + 1);
-        return new Animal(0, animal1.getPosition(), neededEnergy*2, childGenotype);
     }
-
 }

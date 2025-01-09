@@ -12,7 +12,9 @@ public class Genotype {
     List<Integer> genome;
     int currentGenomeIndex;
     int genomeSize;
-
+    private static GenomeVariant genomeVariant;
+    private static int minMutateNumber;
+    private static int maxMutateNumber;
     public Genotype(int genomeSize){
         this.genome = new ArrayList<>();
         this.genomeSize = genomeSize;
@@ -26,6 +28,14 @@ public class Genotype {
         this.currentGenomeIndex = currentGenomeIndex;
     }
 
+    public static void setMinMutateNumber(int minMutateNumber) {
+        Genotype.minMutateNumber = minMutateNumber;
+    }
+
+    public static void setMaxMutateNumber(int maxMutateNumber) {
+        Genotype.maxMutateNumber = maxMutateNumber;
+    }
+
     public List<Integer> getGenome() {
         return genome;
     }
@@ -34,12 +44,16 @@ public class Genotype {
         this.genome = genome;
     }
 
+    public static void setGenomeVariant(GenomeVariant genomeVariant) {
+        Genotype.genomeVariant = genomeVariant;
+    }
+
     public int getCurrentGenomeIndex() {
         return currentGenomeIndex;
     }
 
-    public void indexChange(GenomeVariant variant){
-        switch (variant){
+    public void indexChange(){
+        switch (genomeVariant){
             case NORMAL -> {
                 setCurrentGenomeIndex(this.currentGenomeIndex+1 % genomeSize);
             }
@@ -60,11 +74,31 @@ public class Genotype {
 
     public void mutate(){
         Random random = new Random();
-        int mutateNumber = random.nextInt(genomeSize);
+        int mutateNumber = random.nextInt(maxMutateNumber - minMutateNumber + 1) + minMutateNumber;
         for (int i = 0; i < mutateNumber; i++){
             int index = random.nextInt(genomeSize);
             int value = random.nextInt(8);
             this.genome.set(index, value);
         }
+    }
+    public Genotype createChildGenotype(Genotype otherParentGenotype, float energyPercent){
+        int partIndex = (int)(energyPercent * genomeSize);
+
+        int genomeSize = otherParentGenotype.getGenomeSize();
+        Genotype childGenotype = new Genotype(genomeSize);
+        double genomeSide = Math.random();
+        List<Integer> childGenome = new ArrayList<>();
+        if(genomeSide < 0.5){
+            childGenome.addAll(this.genome.subList(0, partIndex));
+            childGenome.addAll(otherParentGenotype.genome.subList(partIndex, genomeSize));
+        }
+        else{
+            childGenome.addAll(otherParentGenotype.genome.subList(0, partIndex));
+            childGenome.addAll(this.genome.subList(partIndex, genomeSize));
+        }
+        childGenotype.setGenome(childGenome);
+        childGenotype.mutate();
+
+        return childGenotype;
     }
 }

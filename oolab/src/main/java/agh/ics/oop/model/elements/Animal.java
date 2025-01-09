@@ -8,12 +8,12 @@ public class Animal {
     private int direction;
     private Vector2d position;
     private int energy;
-    private Genotype genotype;
+    private final Genotype genotype;
 
-    private static GenomeVariant genomeVariant;
     private int age;
     private int childrenCount;
     private int plantCount;
+    private static int childrenEnergy;
     public Animal(int direction, Vector2d position, int energy, Genotype genotype) {
         this.direction = direction;
         this.position = position;
@@ -28,8 +28,8 @@ public class Animal {
         return energy <= 0;
     }
 
-    public static void setGenomeVariant(GenomeVariant genomeVariant) {
-        Animal.genomeVariant = genomeVariant;
+    public static void setChildrenEnergy(int childrenEnergy) {
+        Animal.childrenEnergy = childrenEnergy;
     }
 
     public int getEnergy() {
@@ -49,7 +49,7 @@ public class Animal {
         currentDirection %= 8;
         this.direction = currentDirection;
         moveInDirection(map);
-        genotype.indexChange(genomeVariant);
+        genotype.indexChange();
         this.energy -= 1;
     }
 
@@ -88,6 +88,12 @@ public class Animal {
     public void setPlantCount(int plantCount) {
         this.plantCount = plantCount;
     }
+
+    public void changeEnergy(int energy){
+        this.energy += energy;
+    }
+
+
 
     private void moveInDirection(WorldMap map) {
         int y = map.getCurrentBounds().upperRight().getY();
@@ -157,5 +163,19 @@ public class Animal {
                 }
             }
         }
+    }
+
+    public Animal createChild(Animal otherParent) {
+        int sumOfEnergy = this.energy + otherParent.energy;
+        float energyPercent = (float) this.energy / sumOfEnergy;
+        this.energy -= childrenEnergy;
+        otherParent.energy -= childrenEnergy;
+
+        Genotype childGenotype = this.genotype.createChildGenotype(otherParent.genotype, energyPercent);
+
+        this.childrenCount += 1;
+        otherParent.childrenCount += 1;
+
+        return new Animal(0, this.position, childrenEnergy*2, childGenotype);
     }
 }
