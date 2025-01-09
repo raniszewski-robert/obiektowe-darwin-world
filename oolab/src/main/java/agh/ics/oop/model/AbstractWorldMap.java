@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.model.elements.*;
+import agh.ics.oop.model.enums.GenomeVariant;
 import agh.ics.oop.model.interfaces.WorldMap;
 import agh.ics.oop.model.records.Boundary;
 
@@ -17,8 +18,10 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected final HashMap<Vector2d, Square> mapSquares;
     public int width;
     public int height;
+    private GenomeVariant genomeVariant;
 
-    protected AbstractWorldMap(int width, int height) {
+
+    protected AbstractWorldMap(int width, int height, GenomeVariant genomeVariant) {
         this.width = width;
         this.height = height;
         this.animals = new ArrayList<>();
@@ -28,6 +31,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         this.jungleUpperY = (int) (0.6 * height) - 1;
         this.lowerLeft = new Vector2d(0, 0);
         this.upperRight = new Vector2d(this.width-1, this.height-1);
+        Animal.setGenomeVariant(genomeVariant);
     }
 
     public Collection<Square> getAllSquares(){
@@ -135,5 +139,73 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
     }
 
+    public void createAnimals(int numberOfAnimals, int genomeSize, int startEnergy) {
+        Random generator = new Random();
+
+        for(int i = 0; i < numberOfAnimals; i++){
+
+            Vector2d position = this.getRandomPosition();
+            int energy = startEnergy;
+            Genotype genotype = new Genotype(genomeSize);
+            int age = 0;
+            Animal newAnimal = new Animal(0, position, startEnergy, genotype);
+            MapFieldElement newElement = new MapFieldElement();
+            newElement.addAnimal(newAnimal);
+            this.place(newElement, position);
+            this.place(newElement,newAnimal.getPosition());
+        }
+    }
+
+    public Vector2d getRandomPosition() {
+        Random random = new Random();
+        int x = random.nextInt(width+1) + lowerLeft.getX();
+        int y = random.nextInt(height+1) + lowerLeft.getY();
+        return new Vector2d(x, y);
+    }
+
+    public void createMap(int numberOfAnimals,int numberOfPlants,int startingEnergy, int energyOfPlant, int genomeSize){
+        createAnimals(numberOfAnimals,genomeSize,startingEnergy);
+        growPlants(numberOfPlants);
+    }
+
+    public void moveAnimal(Animal animal){
+        if (animal.isDead()){
+            Square oldSquare = this.mapSquares.get(animal.getPosition());
+            if(oldSquare != null){
+                oldSquare.removeAnimal(animal);
+            }
+            return;
+        }
+
+        Square oldSquare = this.mapSquares.get(animal.getPosition());
+        Vector2d oldPosition = animal.getPosition();
+        animal.move(this);
+        Vector2d newPosition = animal.getPosition();
+
+        if(oldSquare != null){
+            oldSquare.removeAnimal(animal);
+        }
+
+        Square newSquare = this.mapSquares.get(newPosition);
+
+        if(newSquare == null){
+            MapFieldElement element = new MapFieldElement();
+            element.addAnimal(animal);
+            newSquare = new Square(newPosition,element);
+            this.mapSquares.put(newPosition,newSquare);
+            return;
+        }
+        else{
+            newSquare.addAnimal(animal);
+        }
+    }
+
+    public void moveAllAnimals(){
+        for(Animal animal : this.animals) {
+            moveAnimal(animal);
+            animal.setAge(animal.getAge() + 1);
+        }
+
+    }
 
 }

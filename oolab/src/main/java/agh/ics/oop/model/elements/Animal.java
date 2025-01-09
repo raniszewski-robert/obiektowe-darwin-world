@@ -9,17 +9,27 @@ public class Animal {
     private Vector2d position;
     private int energy;
     private Genotype genotype;
-    private static GenomeVariant genomeVariant;
 
+    private static GenomeVariant genomeVariant;
+    private int age;
+    private int childrenCount;
+    private int plantCount;
     public Animal(int direction, Vector2d position, int energy, Genotype genotype) {
         this.direction = direction;
         this.position = position;
         this.energy = energy;
         this.genotype = genotype;
+        this.age = 0;
+        this.childrenCount = 0;
+        this.plantCount = 0;
     }
 
     public boolean isDead(){
         return energy <= 0;
+    }
+
+    public static void setGenomeVariant(GenomeVariant genomeVariant) {
+        Animal.genomeVariant = genomeVariant;
     }
 
     public int getEnergy() {
@@ -41,6 +51,38 @@ public class Animal {
         moveInDirection(map);
         genotype.indexChange(genomeVariant);
         this.energy -= 1;
+    }
+
+    public Vector2d getPosition() {
+        return position;
+    }
+
+    public void setPosition(Vector2d position) {
+        this.position = position;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public int getChildrenCount() {
+        return childrenCount;
+    }
+
+    public void setChildrenCount(int childrenCount) {
+        this.childrenCount = childrenCount;
+    }
+
+    public int getPlantCount() {
+        return plantCount;
+    }
+
+    public void setPlantCount(int plantCount) {
+        this.plantCount = plantCount;
     }
 
     private void moveInDirection(WorldMap map) {
