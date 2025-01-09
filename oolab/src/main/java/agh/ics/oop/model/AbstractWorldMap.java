@@ -125,15 +125,13 @@ public abstract class AbstractWorldMap implements WorldMap {
                 Plant currPlant = square.getPlant();
                 PriorityQueue<Animal> currAnimals = new PriorityQueue<>(square.getElement().getAnimalsAsQueue());
 
-                if (currAnimals.size() == 0) {
-                    continue;
-                } else {
+                if (!currAnimals.isEmpty()) {
                     Animal strongestAnimal = (Animal) currAnimals.poll();
                     int animalEnergy = strongestAnimal.getEnergy();
                     int newAnimalEnergy = animalEnergy + plantEnergy;
                     strongestAnimal.setEnergy(newAnimalEnergy);
                     square.setPlant(null);
-                    this.plants.remove(currPlant.getPosition());
+                    this.plants.remove(currPlant);
                 }
             }
         }
