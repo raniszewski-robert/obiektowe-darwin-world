@@ -73,6 +73,10 @@ public class Animal {
         return childrenCount;
     }
 
+    public Genotype getGenotype() {
+        return genotype;
+    }
+
     public void setChildrenCount(int childrenCount) {
         this.childrenCount = childrenCount;
     }

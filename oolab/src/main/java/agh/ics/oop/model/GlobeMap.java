@@ -1,11 +1,13 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.enums.GenomeVariant;
+
 import java.util.AbstractMap;
 
 public class GlobeMap extends AbstractWorldMap {
 
-    protected GlobeMap(int width, int height) {
-        super(width, height);
+    protected GlobeMap(int width, int height, GenomeVariant genomeVariant) {
+        super(width, height, genomeVariant);
     }
 
 }

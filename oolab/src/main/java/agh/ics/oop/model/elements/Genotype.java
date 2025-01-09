@@ -12,6 +12,7 @@ public class Genotype {
     List<Integer> genome;
     int currentGenomeIndex;
     int genomeSize;
+
     public Genotype(int genomeSize){
         this.genome = new ArrayList<>();
         this.genomeSize = genomeSize;
@@ -27,6 +28,10 @@ public class Genotype {
 
     public List<Integer> getGenome() {
         return genome;
+    }
+
+    public void setGenome(List<Integer> genome) {
+        this.genome = genome;
     }
 
     public int getCurrentGenomeIndex() {
@@ -47,6 +52,10 @@ public class Genotype {
                 }
             }
         }
+    }
+
+    public int getGenomeSize() {
+        return genomeSize;
     }
 
     public void mutate(){

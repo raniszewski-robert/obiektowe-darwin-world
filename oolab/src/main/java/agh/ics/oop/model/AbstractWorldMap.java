@@ -205,7 +205,47 @@ public abstract class AbstractWorldMap implements WorldMap {
             moveAnimal(animal);
             animal.setAge(animal.getAge() + 1);
         }
+    }
 
+    public void removeDeadAnimals(){
+        for(Animal animal : this.animals) {
+            if (animal.isDead()) {
+                this.animals.remove(animal);
+                Vector2d position = animal.getPosition();
+                Square square = this.mapSquares.get(position);
+                if(square != null){
+                    square.removeAnimal(animal);
+                }
+            }
+        }
+    }
+
+    public Animal copulation(Animal animal1, Animal animal2, int neededEnergy, int mutationNumber){
+
+        int sumOfEnergy = animal1.getEnergy() + animal2.getEnergy();
+        float energyPercent = (float) animal1.getEnergy() / sumOfEnergy;
+        animal1.setEnergy(animal1.getEnergy() - neededEnergy);
+        animal2.setEnergy(animal2.getEnergy() - neededEnergy);
+        int genomeSize = animal1.getGenotype().getGenomeSize();
+        int partIndex = (int)(energyPercent * genomeSize);
+        Genotype childGenotype = new Genotype(genomeSize);
+
+        double genomeSide = Math.random();
+        List<Integer> childGenome = new ArrayList<>();
+        if(genomeSide < 0.5){
+            childGenome.addAll(animal1.getGenotype().getGenome().subList(0, partIndex));
+            childGenome.addAll(animal2.getGenotype().getGenome().subList(partIndex, genomeSize));
+        }
+        else{
+            childGenome.addAll(animal2.getGenotype().getGenome().subList(0, partIndex));
+            childGenome.addAll(animal1.getGenotype().getGenome().subList(partIndex, genomeSize));
+        }
+        childGenotype.setGenome(childGenome);
+        childGenotype.mutate();
+
+        animal1.setChildrenCount(animal1.getChildrenCount() + 1);
+        animal2.setChildrenCount(animal2.getChildrenCount() + 1);
+        return new Animal(0, animal1.getPosition(), neededEnergy*2, childGenotype);
     }
 
 }
