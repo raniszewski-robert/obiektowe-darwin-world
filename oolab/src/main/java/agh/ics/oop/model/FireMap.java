@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.model.elements.*;
+import agh.ics.oop.model.enums.GenomeVariant;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -10,8 +11,8 @@ public class FireMap extends AbstractWorldMap{
     private List<Fire> fires;
     public int burnTime;
 
-    protected FireMap(int width, int height, int burnTime) {
-        super(width, height);
+    protected FireMap(int width, int height, int burnTime, GenomeVariant genomeVariant) {
+        super(width, height, genomeVariant);
         this.fires = new ArrayList<>();
     }
 
