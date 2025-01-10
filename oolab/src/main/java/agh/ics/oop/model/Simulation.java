@@ -5,7 +5,7 @@ import agh.ics.oop.model.elements.Genotype;
 import agh.ics.oop.model.enums.MapVariant;
 import agh.ics.oop.model.records.WorldConfiguration;
 
-public class Simulation {
+public class Simulation implements Runnable {
     WorldConfiguration config;
     AbstractWorldMap worldMap;
     public Simulation(WorldConfiguration config) {
@@ -17,15 +17,20 @@ public class Simulation {
             AbstractWorldMap worldMap = new FireMap(config.mapWidth(), config.mapHeight(), config.burnTime(), config.fireFrequency());
         }
         worldMap.createMap(config.animalStart(), config.plantStart(), config.animalStartEnergy(), config.animalGenotypeLength());
-        
+        Animal.setChildrenEnergy(config.animalEnergyUsedToReproduce());
+        Genotype.setMinMutateNumber(config.animalMutationMinimum());
+        Genotype.setMaxMutateNumber(config.animalMutationMaximum());
+        Genotype.setGenomeVariant(config.genomeVariant());
+
 
     }
-    public void run(int energyOfPlant, int energyAllowingCopulation, int numberOfPlants) {
+    @Override
+    public void run() {
         worldMap.removeDeadAnimals();
         worldMap.moveAllAnimals();
-        worldMap.eatPlants(energyOfPlant);
-        worldMap.copulationAllAnimals(energyAllowingCopulation);
-        worldMap.growPlants(numberOfPlants);
+        worldMap.eatPlants(config.plantEnergy());
+        worldMap.copulationAllAnimals(config.energyAllowingReproduction());
+        worldMap.growPlants(config.plantDaily());
     }
 
 }

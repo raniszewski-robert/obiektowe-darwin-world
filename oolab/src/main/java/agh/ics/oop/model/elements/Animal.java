@@ -13,7 +13,7 @@ public class Animal {
     private int age;
     private int childrenCount;
     private int plantCount;
-    private static int childrenEnergy;
+    private static ThreadLocal<Integer> childrenEnergy = ThreadLocal.withInitial(() -> 0);
     public Animal(int direction, Vector2d position, int energy, Genotype genotype) {
         this.direction = direction;
         this.position = position;
@@ -168,14 +168,14 @@ public class Animal {
     public Animal createChild(Animal otherParent) {
         int sumOfEnergy = this.energy + otherParent.energy;
         float energyPercent = (float) this.energy / sumOfEnergy;
-        this.energy -= childrenEnergy;
-        otherParent.energy -= childrenEnergy;
+        this.energy -= childrenEnergy.get();
+        otherParent.energy -= childrenEnergy.get();
 
         Genotype childGenotype = this.genotype.createChildGenotype(otherParent.genotype, energyPercent);
 
         this.childrenCount += 1;
         otherParent.childrenCount += 1;
 
-        return new Animal(0, this.position, childrenEnergy*2, childGenotype);
+        return new Animal(0, this.position, childrenEnergy.get()*2, childGenotype);
     }
 }
