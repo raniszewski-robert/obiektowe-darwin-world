@@ -150,7 +150,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         return new Vector2d(x, y);
     }
 
-    public void createMap(int numberOfAnimals,int numberOfPlants,int startingEnergy, int energyOfPlant, int genomeSize){
+    public void createMap(int numberOfAnimals,int numberOfPlants,int startingEnergy, int genomeSize){
         createAnimals(numberOfAnimals,genomeSize,startingEnergy);
         growPlants(numberOfPlants);
     }
