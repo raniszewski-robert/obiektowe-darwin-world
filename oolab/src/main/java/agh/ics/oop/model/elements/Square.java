@@ -1,65 +1,40 @@
 package agh.ics.oop.model.elements;
-
-import agh.ics.oop.model.MapFieldElement;
-import agh.ics.oop.model.Vector2d;
-
+import java.util.Comparator;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class Square {
-    private final Vector2d position;
-    private MapFieldElement element;
-
-    public Square(Vector2d position) {
-        this.position = position;
-        this.element = new MapFieldElement();
-    }
-
-    public Square(Vector2d position, MapFieldElement element) {
-        this.position = position;
-        this.element = element;
+    private Plant plant;
+    private PriorityQueue<Animal> animals;
+    private Fire fire;
+    public Square() {
+        this.plant = null;
+        this.animals = new PriorityQueue<>(Comparator.comparingInt(Animal::getEnergy).reversed());
+        this.fire = null;
     }
 
     public void addAnimal(Animal animal) {
-        this.element.addAnimal(animal);
+        animals.add(animal);
     }
-
     public void removeAnimal(Animal animal) {
-        this.element.removeAnimal(animal);
+        animals.remove(animal);
+    }
+    public void addPlant(Plant plant){
+        this.plant = plant;
+    }
+    public void removePlant(){
+        this.plant = null;
     }
 
-    public void addPlant(Plant plant) {
-        this.element.addPlant(plant);
-    }
+    public boolean hasPlant() {return this.plant != null;}
+    public Plant getPlant() {return this.plant;}
 
-    public void removePlant(Plant plant) {
-        this.element.removePlant();
-    }
+    public List<Animal> getAnimals() {return List.copyOf(animals);}
 
-    public MapFieldElement getElement() {
-        return element;
-    }
+    public PriorityQueue<Animal> getAnimalsAsQueue() {return this.animals;}
+    public void setPlant(Plant plant) {this.plant = plant;}
 
-    public Plant getPlant() {
-        return this.element.getPlant();
-    }
-
-    public boolean hasPlant(){
-        return this.element.hasPlant();
-    }
-
-    public List<Animal> getAnimals() {
-        return this.element.getAnimals();
-    }
-
-    public void setPlant(Plant plant){
-        this.element.setPlant(plant);
-    }
-
-    public boolean onFire() {
-        return this.element.onFire();
-    }
-
-    public void removeFire() {
-        this.element.removeFire();
-    }
+    public void addFire(Fire fire) {this.fire = fire;}
+    public void removeFire() {this.fire = null;}
+    public boolean onFire() {return this.fire != null;}
 }
