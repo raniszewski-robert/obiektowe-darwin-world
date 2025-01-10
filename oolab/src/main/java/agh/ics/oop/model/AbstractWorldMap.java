@@ -18,10 +18,8 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected final HashMap<Vector2d, Square> mapSquares;
     public int width;
     public int height;
-    private GenomeVariant genomeVariant;
 
-
-    protected AbstractWorldMap(int width, int height, GenomeVariant genomeVariant) {
+    protected AbstractWorldMap(int width, int height) {
         this.width = width;
         this.height = height;
         this.animals = new ArrayList<>();
@@ -31,7 +29,6 @@ public abstract class AbstractWorldMap implements WorldMap {
         this.jungleUpperY = (int) (0.6 * height) - 1;
         this.lowerLeft = new Vector2d(0, 0);
         this.upperRight = new Vector2d(this.width-1, this.height-1);
-        Genotype.setGenomeVariant(genomeVariant);
     }
 
     public Collection<Square> getAllSquares(){
@@ -145,7 +142,6 @@ public abstract class AbstractWorldMap implements WorldMap {
             MapFieldElement newElement = new MapFieldElement();
             newElement.addAnimal(newAnimal);
             this.place(newElement, position);
-            this.place(newElement,newAnimal.getPosition());
         }
     }
 

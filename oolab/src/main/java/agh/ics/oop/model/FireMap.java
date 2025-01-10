@@ -12,7 +12,7 @@ public class FireMap extends AbstractWorldMap{
     public int burnTime;
 
     protected FireMap(int width, int height, int burnTime, GenomeVariant genomeVariant) {
-        super(width, height, genomeVariant);
+        super(width, height);
         this.fires = new ArrayList<>();
     }
 

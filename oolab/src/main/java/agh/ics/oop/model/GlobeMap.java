@@ -6,8 +6,8 @@ import java.util.AbstractMap;
 
 public class GlobeMap extends AbstractWorldMap {
 
-    protected GlobeMap(int width, int height, GenomeVariant genomeVariant) {
-        super(width, height, genomeVariant);
+    protected GlobeMap(int width, int height) {
+        super(width, height);
     }
 
 }
