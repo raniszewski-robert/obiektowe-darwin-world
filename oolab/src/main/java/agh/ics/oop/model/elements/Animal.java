@@ -1,7 +1,6 @@
 package agh.ics.oop.model.elements;
 
 import agh.ics.oop.model.Vector2d;
-import agh.ics.oop.model.enums.GenomeVariant;
 import agh.ics.oop.model.interfaces.WorldMap;
 
 public class Animal {
@@ -85,8 +84,8 @@ public class Animal {
         return plantCount;
     }
 
-    public void setPlantCount(int plantCount) {
-        this.plantCount = plantCount;
+    public void addPlantCount() {
+        this.plantCount += 1;
     }
 
     public void changeEnergy(int energy){

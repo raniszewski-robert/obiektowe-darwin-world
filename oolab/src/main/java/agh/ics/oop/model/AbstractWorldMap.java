@@ -13,8 +13,9 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected final int jungleLowerY;
     protected final int jungleUpperY;
     protected final UUID id = UUID.randomUUID();
-    protected final List<Animal> animals;
-    protected final List<Plant> plants;
+    protected List<Animal> animals;
+    protected List<Plant> plants;
+    private List<Animal> deadAnimals;
     protected final HashMap<Vector2d, Square> mapSquares;
     public int width;
     public int height;
@@ -125,6 +126,7 @@ public abstract class AbstractWorldMap implements WorldMap {
                     int animalEnergy = strongestAnimal.getEnergy();
                     int newAnimalEnergy = animalEnergy + plantEnergy;
                     strongestAnimal.setEnergy(newAnimalEnergy);
+                    strongestAnimal.addPlantCount();
                     square.setPlant(null);
                     this.plants.remove(currPlant);
                 }
@@ -160,6 +162,9 @@ public abstract class AbstractWorldMap implements WorldMap {
             Square oldSquare = this.mapSquares.get(animal.getPosition());
             if(oldSquare != null){
                 oldSquare.removeAnimal(animal);
+                if(!oldSquare.hasPlant() && oldSquare.getAnimals().isEmpty()){
+                    this.mapSquares.remove(animal.getPosition());
+                }
             }
             return;
         }
@@ -171,6 +176,9 @@ public abstract class AbstractWorldMap implements WorldMap {
 
         if(oldSquare != null){
             oldSquare.removeAnimal(animal);
+            if(!oldSquare.hasPlant() && oldSquare.getAnimals().isEmpty()){
+                this.mapSquares.remove(animal.getPosition());
+            }
         }
 
         Square newSquare = this.mapSquares.get(newPosition);
@@ -201,9 +209,18 @@ public abstract class AbstractWorldMap implements WorldMap {
                 Square square = this.mapSquares.get(position);
                 if(square != null){
                     square.removeAnimal(animal);
+                    if(!square.hasPlant() && square.getAnimals().isEmpty()){
+                        this.mapSquares.remove(animal.getPosition());
+                    }
                 }
+                this.deadAnimals.add(animal);
+
             }
         }
+    }
+
+    public List<Animal> getDeadAnimals() {
+        return deadAnimals;
     }
 
     public void copulationAllAnimals(int energyAllowingCopulation){
@@ -222,4 +239,6 @@ public abstract class AbstractWorldMap implements WorldMap {
             }
         }
     }
+
+
 }
