@@ -10,10 +10,12 @@ import java.util.List;
 public class FireMap extends AbstractWorldMap{
     private List<Fire> fires;
     public int burnTime;
-
-    protected FireMap(int width, int height, int burnTime, GenomeVariant genomeVariant) {
-        super(width, height, genomeVariant);
+    public int fireFrequency;
+    protected FireMap(int width, int height, int burnTime, int fireFrequency) {
+        super(width, height);
         this.fires = new ArrayList<>();
+        this.burnTime = burnTime;
+        this.fireFrequency = fireFrequency;
     }
 
     public void spreadFire() {

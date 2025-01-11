@@ -12,9 +12,9 @@ public class Genotype {
     List<Integer> genome;
     int currentGenomeIndex;
     int genomeSize;
-    private static GenomeVariant genomeVariant;
-    private static int minMutateNumber;
-    private static int maxMutateNumber;
+    private static ThreadLocal<GenomeVariant> genomeVariant = ThreadLocal.withInitial(() -> GenomeVariant.NORMAL);
+    private static ThreadLocal<Integer> minMutateNumber = ThreadLocal.withInitial(() -> 0);
+    private static ThreadLocal<Integer> maxMutateNumber = ThreadLocal.withInitial(() -> 0);
     public Genotype(int genomeSize){
         this.genome = new ArrayList<>();
         this.genomeSize = genomeSize;
@@ -53,7 +53,7 @@ public class Genotype {
     }
 
     public void indexChange(){
-        switch (genomeVariant){
+        switch (genomeVariant.get()){
             case NORMAL -> {
                 setCurrentGenomeIndex(this.currentGenomeIndex+1 % genomeSize);
             }
@@ -74,7 +74,7 @@ public class Genotype {
 
     public void mutate(){
         Random random = new Random();
-        int mutateNumber = random.nextInt(maxMutateNumber - minMutateNumber + 1) + minMutateNumber;
+        int mutateNumber = random.nextInt(maxMutateNumber.get() - minMutateNumber.get() + 1) + minMutateNumber.get();
         for (int i = 0; i < mutateNumber; i++){
             int index = random.nextInt(genomeSize);
             int value = random.nextInt(8);

@@ -13,15 +13,14 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected final int jungleLowerY;
     protected final int jungleUpperY;
     protected final UUID id = UUID.randomUUID();
-    protected final List<Animal> animals;
-    protected final List<Plant> plants;
+    protected List<Animal> animals;
+    protected List<Plant> plants;
+    private List<Animal> deadAnimals;
     protected final HashMap<Vector2d, Square> mapSquares;
     public int width;
     public int height;
-    private GenomeVariant genomeVariant;
 
-
-    protected AbstractWorldMap(int width, int height, GenomeVariant genomeVariant) {
+    protected AbstractWorldMap(int width, int height) {
         this.width = width;
         this.height = height;
         this.animals = new ArrayList<>();
@@ -31,7 +30,6 @@ public abstract class AbstractWorldMap implements WorldMap {
         this.jungleUpperY = (int) (0.6 * height) - 1;
         this.lowerLeft = new Vector2d(0, 0);
         this.upperRight = new Vector2d(this.width-1, this.height-1);
-        Genotype.setGenomeVariant(genomeVariant);
     }
 
     public Collection<Square> getAllSquares(){
@@ -44,12 +42,10 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     @Override
-    public boolean place(MapFieldElement element, Vector2d position) {
+    public boolean place(Square square, Vector2d position) {
         if (!this.isInMap(position)) {
             throw new IllegalArgumentException(position + " is out of map");
         }
-
-        Square square = new Square(position, element);
         List<Animal> newAnimals = square.getAnimals();
         Plant newPlant = square.getPlant();
 
@@ -79,8 +75,8 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     @Override
-    public MapFieldElement objectAt(Vector2d position) {
-        return null;
+    public Square objectAt(Vector2d position) {
+        return mapSquares.get(position);
     }
 
     @Override
@@ -113,23 +109,24 @@ public abstract class AbstractWorldMap implements WorldMap {
             } while ((currentSquare != null && currentSquare.hasPlant()) || random.nextDouble() > chance);
 
             Plant newPlant = new Plant(position);
-            MapFieldElement newElement = new MapFieldElement();
-            newElement.addPlant(newPlant);
-            this.place(newElement, newPlant.getPosition());
+            Square newSquare = new Square();
+            newSquare.addPlant(newPlant);
+            this.place(newSquare, newPlant.getPosition());
         }
     }
 
     public void eatPlants(int plantEnergy) {
         for (Square square : getAllSquares()) {
-            if (square.getElement().hasPlant()){
+            if (square.hasPlant()){
                 Plant currPlant = square.getPlant();
-                PriorityQueue<Animal> currAnimals = new PriorityQueue<>(square.getElement().getAnimalsAsQueue());
+                PriorityQueue<Animal> currAnimals = new PriorityQueue<>(square.getAnimalsAsQueue());
 
                 if (!currAnimals.isEmpty()) {
                     Animal strongestAnimal = (Animal) currAnimals.poll();
                     int animalEnergy = strongestAnimal.getEnergy();
                     int newAnimalEnergy = animalEnergy + plantEnergy;
                     strongestAnimal.setEnergy(newAnimalEnergy);
+                    strongestAnimal.addPlantCount();
                     square.setPlant(null);
                     this.plants.remove(currPlant);
                 }
@@ -142,10 +139,9 @@ public abstract class AbstractWorldMap implements WorldMap {
             Vector2d position = this.getRandomPosition();
             Genotype genotype = new Genotype(genomeSize);
             Animal newAnimal = new Animal(0, position, startEnergy, genotype);
-            MapFieldElement newElement = new MapFieldElement();
-            newElement.addAnimal(newAnimal);
-            this.place(newElement, position);
-            this.place(newElement,newAnimal.getPosition());
+            Square newSquare = new Square();
+            newSquare.addAnimal(newAnimal);
+            this.place(newSquare, position);
         }
     }
 
@@ -156,7 +152,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         return new Vector2d(x, y);
     }
 
-    public void createMap(int numberOfAnimals,int numberOfPlants,int startingEnergy, int energyOfPlant, int genomeSize){
+    public void createMap(int numberOfAnimals,int numberOfPlants,int startingEnergy, int genomeSize){
         createAnimals(numberOfAnimals,genomeSize,startingEnergy);
         growPlants(numberOfPlants);
     }
@@ -166,6 +162,9 @@ public abstract class AbstractWorldMap implements WorldMap {
             Square oldSquare = this.mapSquares.get(animal.getPosition());
             if(oldSquare != null){
                 oldSquare.removeAnimal(animal);
+                if(!oldSquare.hasPlant() && oldSquare.getAnimals().isEmpty()){
+                    this.mapSquares.remove(animal.getPosition());
+                }
             }
             return;
         }
@@ -177,14 +176,16 @@ public abstract class AbstractWorldMap implements WorldMap {
 
         if(oldSquare != null){
             oldSquare.removeAnimal(animal);
+            if(!oldSquare.hasPlant() && oldSquare.getAnimals().isEmpty()){
+                this.mapSquares.remove(animal.getPosition());
+            }
         }
 
         Square newSquare = this.mapSquares.get(newPosition);
 
         if(newSquare == null){
-            MapFieldElement element = new MapFieldElement();
-            element.addAnimal(animal);
-            newSquare = new Square(newPosition,element);
+            newSquare = new Square();
+            newSquare.addAnimal(animal);
             this.mapSquares.put(newPosition,newSquare);
             return;
         }
@@ -208,15 +209,24 @@ public abstract class AbstractWorldMap implements WorldMap {
                 Square square = this.mapSquares.get(position);
                 if(square != null){
                     square.removeAnimal(animal);
+                    if(!square.hasPlant() && square.getAnimals().isEmpty()){
+                        this.mapSquares.remove(animal.getPosition());
+                    }
                 }
+                this.deadAnimals.add(animal);
+
             }
         }
+    }
+
+    public List<Animal> getDeadAnimals() {
+        return deadAnimals;
     }
 
     public void copulationAllAnimals(int energyAllowingCopulation){
         for(Square square: this.mapSquares.values()){
             if(square.getAnimals().size()>1){
-                PriorityQueue<Animal> currAnimals = new PriorityQueue<>(square.getElement().getAnimalsAsQueue());
+                PriorityQueue<Animal> currAnimals = new PriorityQueue<>(square.getAnimalsAsQueue());
                 currAnimals.removeIf(x -> x.getEnergy() < energyAllowingCopulation);
                 while(currAnimals.size() > 1){
                     Animal firstParent = currAnimals.poll();
@@ -229,4 +239,6 @@ public abstract class AbstractWorldMap implements WorldMap {
             }
         }
     }
+
+
 }
