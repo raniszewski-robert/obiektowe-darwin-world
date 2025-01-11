@@ -18,13 +18,19 @@ public class SimulationApp extends Application {
         loader.setLocation(getClass().getClassLoader().getResource("start.fxml"));
         GridPane viewRoot = loader.load();
         SimulationStartPresenter presenter = loader.getController();
-
+        configureStage(stage, viewRoot);
         stage.setTitle("Darwin World - Menu");
-        //Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/a.png")));
-        //stage.getIcons().add(icon);
-        stage.setMaximized(true);
-        stage.setScene(new Scene(viewRoot));
         stage.show();
 
+    }
+
+    public static void configureStage(Stage primaryStage, GridPane viewRoot) {
+        var scene = new Scene(viewRoot);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Simulation app");
+        primaryStage.minWidthProperty().bind(viewRoot.minWidthProperty());
+        primaryStage.minHeightProperty().bind(viewRoot.minHeightProperty());
+        //Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/a.png")));
+        //stage.getIcons().add(icon);
     }
 }
