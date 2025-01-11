@@ -1,5 +1,6 @@
 package agh.ics.oop.model.presenter;
 
+import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;

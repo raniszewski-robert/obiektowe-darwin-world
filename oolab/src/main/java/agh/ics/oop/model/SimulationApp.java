@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.model.presenter.SimulationPresenter;
+import agh.ics.oop.model.presenter.SimulationStartPresenter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,8 +16,8 @@ public class SimulationApp extends Application {
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("start.fxml"));
-        BorderPane viewRoot = loader.load();
-        SimulationPresenter presenter = loader.getController();
+        GridPane viewRoot = loader.load();
+        SimulationStartPresenter presenter = loader.getController();
 
         stage.setTitle("Darwin World - Menu");
         //Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/a.png")));

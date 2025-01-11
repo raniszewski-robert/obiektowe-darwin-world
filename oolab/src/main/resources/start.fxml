@@ -1,101 +1,104 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.geometry.Insets?>
+
+<?import java.lang.*?>
+<?import javafx.collections.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
-<ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="agh.ics.oop.presenter.SimulationPresenter">
-    <content>
-        <VBox spacing="15" padding="20">
-            <Label text="Konfiguracja symulacji Darwin World" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+<GridPane minHeight="550.0" minWidth="850.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.model.presenter.SimulationStartPresenter">
+    <padding>
+        <Insets top="25" right="25" bottom="10" left="25"/>
+    </padding>
+    <VBox spacing="15">
+        <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Konfiguracja symulacji Darwin World" />
 
-            <!-- Wymiary mapy -->
-            <HBox spacing="10">
-                <Label text="Szerokość mapy:"/>
-                <TextField fx:id="mapWidthField" promptText="Podaj szerokość"/>
-                <Label text="Wysokość mapy:"/>
-                <TextField fx:id="mapHeightField" promptText="Podaj wysokość"/>
-            </HBox>
+        <!-- Wymiary mapy -->
+        <HBox spacing="10">
+            <Label text="Szerokość mapy:" />
+            <TextField fx:id="mapWidthField" promptText="Podaj szerokość" />
+            <Label text="Wysokość mapy:" />
+            <TextField fx:id="mapHeightField" promptText="Podaj wysokość" />
+        </HBox>
 
-            <!-- Wariant mapy -->
-            <HBox spacing="10">
-                <Label text="Wariant mapy:"/>
-                <ChoiceBox fx:id="mapVariantChoice">
-                    <items>
-                        <FXCollections fx:factory="observableArrayList">
-                            <String fx:value="Kula ziemska"/>
-                            <String fx:value="Pożary"/>
-                        </FXCollections>
-                    </items>
-                </ChoiceBox>
-            </HBox>
+        <!-- Wariant mapy -->
+        <HBox spacing="10">
+            <Label text="Wariant mapy:" />
+            <ChoiceBox fx:id="mapVariantChoice" prefHeight="26.0" prefWidth="2.0">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Kula ziemska" />
+                        <String fx:value="Pożary" />
+                    </FXCollections>
+                </items>
+            </ChoiceBox>
+        </HBox>
 
-            <!-- Roślinność -->
-            <HBox spacing="10">
-                <Label text="Początkowa liczba roślin:"/>
-                <TextField fx:id="plantStartField" promptText="Podaj liczbę"/>
-                <Label text="Liczba roślin wyrastających na dzień:"/>
-                <TextField fx:id="plantDailyField" promptText="Podaj liczbę"/>
-            </HBox>
+        <!-- Roślinność -->
+        <HBox spacing="10">
+            <Label text="Początkowa liczba roślin:" />
+            <TextField fx:id="plantStartField" promptText="Podaj liczbę" />
+            <Label text="Liczba roślin wyrastających na dzień:" />
+            <TextField fx:id="plantDailyField" promptText="Podaj liczbę" />
+        </HBox>
 
-            <!-- Energia roślin -->
-            <HBox spacing="10">
-                <Label text="Energia zjedzonej rośliny:"/>
-                <TextField fx:id="plantEnergyField" promptText="Podaj wartość energii"/>
-            </HBox>
+        <!-- Energia roślin -->
+        <HBox spacing="10">
+            <Label text="Energia zjedzonej rośliny:" />
+            <TextField fx:id="plantEnergyField" promptText="Podaj wartość energii" />
+        </HBox>
 
-            <!-- Zwierzaki -->
-            <HBox spacing="10">
-                <Label text="Startowa liczba zwierząt:"/>
-                <TextField fx:id="animalStartField" promptText="Podaj liczbę"/>
-                <Label text="Energia startowa zwierząt:"/>
-                <TextField fx:id="animalStartEnergyField" promptText="Podaj wartość energii"/>
-            </HBox>
+        <!-- Zwierzaki -->
+        <HBox spacing="10">
+            <Label text="Startowa liczba zwierząt:" />
+            <TextField fx:id="animalStartField" promptText="Podaj liczbę" />
+            <Label text="Energia startowa zwierząt:" />
+            <TextField fx:id="animalStartEnergyField" promptText="Podaj wartość energii" />
+        </HBox>
 
-            <!-- Energia zwierząt -->
-            <HBox spacing="10">
-                <Label text="Energia potrzebna do rozmnażania:"/>
-                <TextField fx:id="energyAllowingReproductionField" promptText="Podaj wartość"/>
-                <Label text="Energia dzienna zużywana przez zwierzę:"/>
-                <TextField fx:id="animalEnergyDailyField" promptText="Podaj wartość"/>
-                <Label text="Energia rodziców dla potomka:"/>
-                <TextField fx:id="animalEnergyUsedToReproduceField" promptText="Podaj wartość"/>
-            </HBox>
+        <!-- Genotyp i mutacje -->
+        <HBox spacing="10">
+            <Label text="Długość genomu:" />
+            <TextField fx:id="animalGenotypeLengthField" promptText="Podaj liczbę" />
+            <Label text="Minimalna liczba mutacji:" />
+            <TextField fx:id="animalMutationMinimumField" promptText="Podaj wartość" />
+            <Label text="Maksymalna liczba mutacji:" />
+            <TextField fx:id="animalMutationMaximumField" promptText="Podaj wartość" />
+        </HBox>
 
-            <!-- Genotyp i mutacje -->
-            <HBox spacing="10">
-                <Label text="Długość genomu:"/>
-                <TextField fx:id="animalGenotypeLengthField" promptText="Podaj liczbę"/>
-                <Label text="Minimalna liczba mutacji:"/>
-                <TextField fx:id="animalMutationMinimumField" promptText="Podaj wartość"/>
-                <Label text="Maksymalna liczba mutacji:"/>
-                <TextField fx:id="animalMutationMaximumField" promptText="Podaj wartość"/>
-            </HBox>
+        <!-- Wariant genomu -->
+        <HBox spacing="10">
+            <Label text="Wariant genomu zwierząt:" />
+            <ChoiceBox fx:id="genomeVariantChoice">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Pełna predestynacja" />
+                        <String fx:value="Nieco szaleństwa" />
+                    </FXCollections>
+                </items>
+            </ChoiceBox>
+        </HBox>
 
-            <!-- Wariant genomu -->
-            <HBox spacing="10">
-                <Label text="Wariant genomu zwierząt:"/>
-                <ChoiceBox fx:id="genomeVariantChoice">
-                    <items>
-                        <FXCollections fx:factory="observableArrayList">
-                            <String fx:value="Pełna predestynacja"/>
-                            <String fx:value="Nieco szaleństwa"/>
-                        </FXCollections>
-                    </items>
-                </ChoiceBox>
-            </HBox>
+        <!-- Pożary -->
+        <HBox spacing="10">
+            <Label text="Częstotliwość pożarów (w turach):" />
+            <TextField fx:id="fireFrequencyField" promptText="Podaj liczbę" />
+            <Label text="Czas trwania pożaru (w turach):" />
+            <TextField fx:id="burnTimeField" promptText="Podaj liczbę" />
+        </HBox>
 
-            <!-- Pożary -->
-            <HBox spacing="10">
-                <Label text="Częstotliwość pożarów (w turach):"/>
-                <TextField fx:id="fireFrequencyField" promptText="Podaj liczbę"/>
-                <Label text="Czas trwania pożaru (w turach):"/>
-                <TextField fx:id="burnTimeField" promptText="Podaj liczbę"/>
-            </HBox>
 
-            <!-- Przycisk startowy -->
-            <Button text="Rozpocznij Symulację" fx:id="startSimulationButton" onAction="#onSimulationStartClicked" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-        </VBox>
-    </content>
-</ScrollPane>
+        <!-- Energia zwierząt -->
+        <HBox>
+            <Label text="Energia potrzebna do rozmnażania:" />
+            <TextField fx:id="energyAllowingReproductionField" promptText="Podaj wartość" />
+            <Label text="Energia dzienna zużywana przez zwierzę:" />
+            <TextField fx:id="animalEnergyDailyField" promptText="Podaj wartość" />
+            <Label text="Energia rodziców dla potomka:" />
+            <TextField fx:id="animalEnergyUsedToReproduceField" promptText="Podaj wartość" />
+        </HBox>
+
+        <!-- Przycisk startowy -->
+        <Button fx:id="startSimulationButton" onAction="#onSimulationStartClicked" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Rozpocznij Symulację" />
+    </VBox>
+</GridPane>

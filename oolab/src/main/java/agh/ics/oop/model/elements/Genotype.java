@@ -29,11 +29,11 @@ public class Genotype {
     }
 
     public static void setMinMutateNumber(int minMutateNumber) {
-        Genotype.minMutateNumber = minMutateNumber;
+        Genotype.minMutateNumber.set(minMutateNumber);
     }
 
     public static void setMaxMutateNumber(int maxMutateNumber) {
-        Genotype.maxMutateNumber = maxMutateNumber;
+        Genotype.maxMutateNumber.set(maxMutateNumber);
     }
 
     public List<Integer> getGenome() {
@@ -45,7 +45,7 @@ public class Genotype {
     }
 
     public static void setGenomeVariant(GenomeVariant genomeVariant) {
-        Genotype.genomeVariant = genomeVariant;
+        Genotype.genomeVariant.set(genomeVariant);
     }
 
     public int getCurrentGenomeIndex() {
