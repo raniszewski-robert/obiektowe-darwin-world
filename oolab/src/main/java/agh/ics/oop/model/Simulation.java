@@ -21,8 +21,6 @@ public class Simulation implements Runnable {
         Genotype.setMinMutateNumber(config.animalMutationMinimum());
         Genotype.setMaxMutateNumber(config.animalMutationMaximum());
         Genotype.setGenomeVariant(config.genomeVariant());
-
-
     }
     @Override
     public void run() {

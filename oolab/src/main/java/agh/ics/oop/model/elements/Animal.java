@@ -28,7 +28,7 @@ public class Animal {
     }
 
     public static void setChildrenEnergy(int childrenEnergy) {
-        Animal.childrenEnergy = childrenEnergy;
+        Animal.childrenEnergy.set(childrenEnergy);
     }
 
     public int getEnergy() {
