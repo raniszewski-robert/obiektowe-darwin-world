@@ -1,13 +1,19 @@
 package agh.ics.oop.model.presenter;
 
+import agh.ics.oop.model.SimulationApp;
 import agh.ics.oop.model.enums.GenomeVariant;
 import agh.ics.oop.model.enums.MapVariant;
 import agh.ics.oop.model.records.WorldConfiguration;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class SimulationStartPresenter extends SimulationPresenter {
     @FXML private TextField mapWidthField;
@@ -51,13 +57,26 @@ public class SimulationStartPresenter extends SimulationPresenter {
                     GenomeVariant.parser(genomeVariantChoice.getValue())
             );
 
-            startSimulation(configuration);
+            openNewWindow(configuration);
         } catch (Exception e) {
             showAlert("Błąd", "Nieprawidłowe dane", "Sprawdź wprowadzone wartości!", Alert.AlertType.ERROR);
         }
     }
 
     private void startSimulation(WorldConfiguration configuration) {
+
+    }
+
+    public void openNewWindow(WorldConfiguration config) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
+        GridPane viewRoot = loader.load();
+        SimulationStartPresenter additionalPresenter = loader.getController();
+        Stage additionalStage = new Stage();
+
+        SimulationApp.configureStage(additionalStage, viewRoot);
+        additionalStage.show();
+        startSimulation(config);
 
     }
 }
