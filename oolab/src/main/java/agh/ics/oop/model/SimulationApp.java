@@ -16,15 +16,14 @@ public class SimulationApp extends Application {
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("start.fxml"));
-        GridPane viewRoot = loader.load();
+        BorderPane viewRoot = loader.load();
         SimulationStartPresenter presenter = loader.getController();
         configureStage(stage, viewRoot);
         stage.setTitle("Darwin World - Menu");
         stage.show();
-
     }
 
-    public static void configureStage(Stage primaryStage, GridPane viewRoot) {
+    public static void configureStage(Stage primaryStage, BorderPane viewRoot) {
         var scene = new Scene(viewRoot);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Simulation app");

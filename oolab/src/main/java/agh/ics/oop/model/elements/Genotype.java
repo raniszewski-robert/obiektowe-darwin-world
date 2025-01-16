@@ -21,7 +21,7 @@ public class Genotype {
         for (int i = 0; i < genomeSize; i++){
             this.genome.add((int) round(Math.random()*8));
         }
-        this.currentGenomeIndex = (int) round(Math.random()*genomeSize);
+        this.currentGenomeIndex = (int) round(Math.random()*(genomeSize-1));
     }
 
     public void setCurrentGenomeIndex(int currentGenomeIndex) {
@@ -55,14 +55,13 @@ public class Genotype {
     public void indexChange(){
         switch (genomeVariant.get()){
             case NORMAL -> {
-                setCurrentGenomeIndex(this.currentGenomeIndex+1 % genomeSize);
-            }
+                setCurrentGenomeIndex((this.currentGenomeIndex+1) % genomeSize);}
             case CRAZY -> {
                 if(Math.random() <= 0.2){
-                    setCurrentGenomeIndex((int) round(Math.random()*genomeSize));
+                    setCurrentGenomeIndex((int) round(Math.random()* (genomeSize-1)));
                 }
                 else{
-                    setCurrentGenomeIndex(this.currentGenomeIndex+1 % genomeSize);
+                    setCurrentGenomeIndex((this.currentGenomeIndex+1) % genomeSize);
                 }
             }
         }
@@ -76,7 +75,7 @@ public class Genotype {
         Random random = new Random();
         int mutateNumber = random.nextInt(maxMutateNumber.get() - minMutateNumber.get() + 1) + minMutateNumber.get();
         for (int i = 0; i < mutateNumber; i++){
-            int index = random.nextInt(genomeSize);
+            int index = random.nextInt(0, genomeSize-1);
             int value = random.nextInt(8);
             this.genome.set(index, value);
         }

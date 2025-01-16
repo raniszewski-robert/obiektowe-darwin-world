@@ -3,6 +3,8 @@ package agh.ics.oop.model.elements;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.interfaces.WorldMap;
 
+import java.util.Random;
+
 public class Animal {
     private int direction;
     private Vector2d position;
@@ -12,15 +14,29 @@ public class Animal {
     private int age;
     private int childrenCount;
     private int plantCount;
-    private static ThreadLocal<Integer> childrenEnergy = ThreadLocal.withInitial(() -> 0);
-    public Animal(int direction, Vector2d position, int energy, Genotype genotype) {
-        this.direction = direction;
+    private static final ThreadLocal<Integer> childrenEnergy = ThreadLocal.withInitial(() -> 0);
+    public Animal(Vector2d position, int energy, int genotypeSize) {
         this.position = position;
         this.energy = energy;
-        this.genotype = genotype;
         this.age = 0;
         this.childrenCount = 0;
         this.plantCount = 0;
+        Genotype genotype = new Genotype(genotypeSize);
+        Random random = new Random();
+        genotype.setCurrentGenomeIndex(random.nextInt(0, genotypeSize));
+        this.genotype = genotype;
+        int direction = random.nextInt(0, 8);
+        this.direction = direction;
+    }
+    public Animal(Vector2d position, int energy, Genotype genotype) {
+        this.position = position;
+        this.energy = energy;
+        this.age = 0;
+        this.childrenCount = 0;
+        this.plantCount = 0;
+        this.genotype = genotype;
+        Random random = new Random();
+        this.direction = random.nextInt(0, 8);
     }
 
     public boolean isDead(){
@@ -42,8 +58,8 @@ public class Animal {
     public void move(WorldMap map){
         int currentDirection = this.direction;
         int currentGenotypeIndex = genotype.getCurrentGenomeIndex();
-        int currentDirectionChange = genotype.getGenome().get(currentGenotypeIndex);
-
+        int currentDirectionChange = 0;
+        currentDirectionChange = genotype.getGenome().get(currentGenotypeIndex);
         currentDirection += currentDirectionChange;
         currentDirection %= 8;
         this.direction = currentDirection;
@@ -54,10 +70,6 @@ public class Animal {
 
     public Vector2d getPosition() {
         return position;
-    }
-
-    public void setPosition(Vector2d position) {
-        this.position = position;
     }
 
     public int getAge() {
@@ -88,12 +100,6 @@ public class Animal {
         this.plantCount += 1;
     }
 
-    public void changeEnergy(int energy){
-        this.energy += energy;
-    }
-
-
-
     private void moveInDirection(WorldMap map) {
         int y = map.getCurrentBounds().upperRight().getY();
         int x = map.getCurrentBounds().upperRight().getX();
@@ -113,13 +119,13 @@ public class Animal {
                 } else {
                     moveVector = this.position.add(new Vector2d(1, 1));
                     moveVector = new Vector2d(moveVector.getX() % x, moveVector.getY());
-                    this.position.add(moveVector);
+                    this.position = moveVector;
                 }
             }
             case 2 -> {
                 moveVector = this.position.add(new Vector2d(1, 0));
                 moveVector = new Vector2d(moveVector.getX() % x, moveVector.getY());
-                this.position.add(moveVector);
+                this.position = moveVector;
                 }
             case 3 -> {
                 if ((this.position.getY() - 1) < 0) {
@@ -127,7 +133,7 @@ public class Animal {
                 } else {
                     moveVector = this.position.add(new Vector2d(1, -1));
                     moveVector = new Vector2d(moveVector.getX() % x, moveVector.getY());
-                    this.position.add(moveVector);
+                    this.position = moveVector;
                 }
             }
             case 4 -> {
@@ -143,27 +149,26 @@ public class Animal {
                     this.direction = 0;
                 } else {
                     moveVector = this.position.add(new Vector2d(-1, -1));
-                    moveVector = new Vector2d(moveVector.getX() % x, moveVector.getY());
-                    this.position.add(moveVector);
+                    moveVector = new Vector2d((moveVector.getX()+x) % x, moveVector.getY());
+                    this.position = moveVector;
                 }
             }
             case 6 -> {
                 moveVector = this.position.add(new Vector2d(-1, 0));
-                moveVector = new Vector2d(moveVector.getX() % x, moveVector.getY());
-                this.position.add(moveVector);
+                moveVector = new Vector2d((moveVector.getX()+x) % x, moveVector.getY());
+                this.position = moveVector;
             }
             case 7 -> {
                 if ((this.position.getY() + 1) >= y) {
                     this.direction = 4;
                 } else {
                     moveVector = this.position.add(new Vector2d(-1, 1));
-                    moveVector = new Vector2d(moveVector.getX() % x, moveVector.getY());
-                    this.position.add(moveVector);
+                    moveVector = new Vector2d((moveVector.getX()+x) % x, moveVector.getY());
+                    this.position = moveVector;
                 }
             }
         }
     }
-
     public Animal createChild(Animal otherParent) {
         int sumOfEnergy = this.energy + otherParent.energy;
         float energyPercent = (float) this.energy / sumOfEnergy;
@@ -175,6 +180,7 @@ public class Animal {
         this.childrenCount += 1;
         otherParent.childrenCount += 1;
 
-        return new Animal(0, this.position, childrenEnergy.get()*2, childGenotype);
+        return new Animal(this.position, childrenEnergy.get()*2, childGenotype);
     }
+
 }
