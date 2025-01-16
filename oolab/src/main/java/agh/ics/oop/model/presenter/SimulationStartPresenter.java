@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.util.List;
 
 public class SimulationStartPresenter extends SimulationPresenter {
     @FXML private Spinner<Integer> mapWidthSpinner;
@@ -67,7 +68,7 @@ public class SimulationStartPresenter extends SimulationPresenter {
         }
     }
 
-    public void openNewWindow(WorldConfiguration config) throws IOException {
+    public void openNewWindow(WorldConfiguration config) throws IOException, InterruptedException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
         BorderPane viewRoot = loader.load();
@@ -75,6 +76,7 @@ public class SimulationStartPresenter extends SimulationPresenter {
         Stage additionalStage = new Stage();
         SimulationApp.configureStage(additionalStage, viewRoot);
         additionalStage.show();
+
 
         additionalPresenter.startSimulation(config);
 

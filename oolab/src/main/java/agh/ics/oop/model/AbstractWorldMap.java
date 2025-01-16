@@ -2,6 +2,7 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.model.elements.*;
 import agh.ics.oop.model.enums.GenomeVariant;
+import agh.ics.oop.model.interfaces.MapChangeListener;
 import agh.ics.oop.model.interfaces.WorldMap;
 import agh.ics.oop.model.records.Boundary;
 
@@ -13,9 +14,10 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected final int jungleLowerY;
     protected final int jungleUpperY;
     protected final UUID id = UUID.randomUUID();
+    private final List<MapChangeListener> observers = new ArrayList<>();
     protected List<Animal> animals;
     protected List<Plant> plants;
-    private List<Animal> deadAnimals;
+    private List<Animal> deadAnimals = new ArrayList<>();
     protected final HashMap<Vector2d, Square> mapSquares;
     public int width;
     public int height;
@@ -43,6 +45,10 @@ public abstract class AbstractWorldMap implements WorldMap {
     @Override
     public Boundary getCurrentBounds() {
         return new Boundary(new Vector2d(0,0), new Vector2d(width-1, height-1));
+    }
+
+    public List<Animal> getAnimals() {
+        return animals;
     }
 
     @Override
@@ -121,6 +127,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     public void eatPlants(int plantEnergy) {
         for (Square square : getAllSquares()) {
+
             if (square.hasPlant()){
                 Plant currPlant = square.getPlant();
                 PriorityQueue<Animal> currAnimals = new PriorityQueue<>(square.getAnimalsAsQueue());
@@ -130,6 +137,7 @@ public abstract class AbstractWorldMap implements WorldMap {
                     int animalEnergy = strongestAnimal.getEnergy();
                     int newAnimalEnergy = animalEnergy + plantEnergy;
                     strongestAnimal.setEnergy(newAnimalEnergy);
+                    System.out.println(strongestAnimal.getEnergy());
                     strongestAnimal.addPlantCount();
                     square.setPlant(null);
                     this.plants.remove(currPlant);
@@ -206,9 +214,10 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     public void removeDeadAnimals(){
+        List<Animal> animalsToRemove = new ArrayList<>();
         for(Animal animal : this.animals) {
             if (animal.isDead()) {
-                this.animals.remove(animal);
+                animalsToRemove.add(animal);
                 Vector2d position = animal.getPosition();
                 Square square = this.mapSquares.get(position);
                 if(square != null){
@@ -218,8 +227,10 @@ public abstract class AbstractWorldMap implements WorldMap {
                     }
                 }
                 this.deadAnimals.add(animal);
-
             }
+        }
+        for(Animal animal : animalsToRemove) {
+            this.animals.remove(animal);
         }
     }
 
@@ -244,5 +255,22 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
     }
 
+    public void addObserver(MapChangeListener observer) {
+        observers.add(observer);
+    }
 
+    public void removeObserver(MapChangeListener observer) {
+        observers.remove(observer);
+    }
+
+    protected void notifyObservers() {
+        for (MapChangeListener observer : observers) {
+            observer.mapChanged(this, new ArrayList<>(),new ArrayList<>());
+        }
+    }
+    public void mapChanged() {
+        synchronized(this){
+            notifyObservers();
+        }
+    }
 }

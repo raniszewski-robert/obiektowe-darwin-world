@@ -2,10 +2,14 @@ package agh.ics.oop.model.presenter;
 
 import agh.ics.oop.model.AbstractWorldMap;
 import agh.ics.oop.model.Simulation;
+import agh.ics.oop.model.SimulationEngine;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Square;
+import agh.ics.oop.model.interfaces.MapChangeListener;
+import agh.ics.oop.model.interfaces.WorldMap;
 import agh.ics.oop.model.records.WorldConfiguration;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -14,6 +18,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
@@ -23,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 
-public class SimulationWorldPresenter extends SimulationPresenter {
+public class SimulationWorldPresenter extends SimulationPresenter implements MapChangeListener {
 
     public Button pauseResumeButton;
     public Label followedGenome;
@@ -95,13 +100,14 @@ public class SimulationWorldPresenter extends SimulationPresenter {
 
 
 
-    public void startSimulation(WorldConfiguration config){
+    public void startSimulation(WorldConfiguration config) throws InterruptedException {
         height = config.mapHeight();
         width = config.mapWidth();
-        Simulation simulation = new Simulation(config);
+        Simulation simulation = new Simulation(config, this);
         this.worldMap = simulation.getWorldMap();
         drawEmptyMap();
-        drawMap();
+        SimulationEngine simulationEngine = new SimulationEngine();
+        simulationEngine.runAsyncInThreadPool(List.of(simulation));
 
 
     }
@@ -136,6 +142,13 @@ public class SimulationWorldPresenter extends SimulationPresenter {
     }
 
     public void drawMap() {
+        for (int y = 0; y<height; y++) {
+            for (int x = 0; x < width; x++) {
+                ImageView imageView = gridLabels.get(y).get(x);
+                imageView.setImage(dirt);
+            }
+        }
+
         for(Map.Entry<Vector2d, Square> entry : worldMap.getMapSquares().entrySet()){
             int x = entry.getKey().getX();
             int y = entry.getKey().getY();
@@ -158,10 +171,6 @@ public class SimulationWorldPresenter extends SimulationPresenter {
     }
     private void handleMouseClick(int finalRow, int finalCol) {
     }
-
-    public void changeZoom(MouseEvent mouseEvent) {
-    }
-
     public void highlightPopularGenome(ActionEvent actionEvent) {
     }
 
@@ -169,5 +178,29 @@ public class SimulationWorldPresenter extends SimulationPresenter {
     }
 
     public void highlightDominantGrass(ActionEvent actionEvent) {
+    }
+
+    public void changeZoom() {
+        mapGrid.setScaleX((zoomSlider.getValue()+1)/40);
+        mapGrid.setScaleY((zoomSlider.getValue()+1)/40);
+    }
+
+    public void movePane(KeyCode keyCode) {
+        switch (keyCode) {
+            case LEFT -> translateX+=(zoomSlider.getValue()+1)/4;
+            case RIGHT -> translateX-=(zoomSlider.getValue()+1)/4;
+            case UP -> translateY+=(zoomSlider.getValue()+1)/4;
+            case DOWN -> translateY-=(zoomSlider.getValue()+1)/4;
+        }
+        mapGrid.setTranslateX(translateX);
+        mapGrid.setTranslateY(translateY);
+    }
+
+    @Override
+    public void mapChanged(WorldMap worldMap, List<String> messages, List<Vector2d> list) {
+        Platform.runLater(()-> {
+            System.out.println(this.worldMap.getAnimals().size());
+            drawMap();
+        });
     }
 }
