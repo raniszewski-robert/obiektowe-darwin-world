@@ -6,8 +6,8 @@ import agh.ics.oop.model.enums.MapVariant;
 import agh.ics.oop.model.records.WorldConfiguration;
 
 public class Simulation implements Runnable {
-    WorldConfiguration config;
-    AbstractWorldMap worldMap;
+    private WorldConfiguration config;
+    private AbstractWorldMap worldMap;
     public Simulation(WorldConfiguration config) {
         this.config = config;
         if(config.mapVariant() == MapVariant.NORMAL){

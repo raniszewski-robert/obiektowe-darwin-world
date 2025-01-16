@@ -5,10 +5,11 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 import java.util.Set;
 
-abstract public class SimulationPresenter{
+abstract public class SimulationPresenter extends Stage {
     @FXML
     protected Pane rootPane;
 
@@ -20,7 +21,4 @@ abstract public class SimulationPresenter{
         alert.showAndWait();
     }
 
-    protected Set<Node> getElementsWithClass(String className) {
-        return rootPane.lookupAll("." + className);
-    }
 }
