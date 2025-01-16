@@ -9,19 +9,29 @@ public class Simulation implements Runnable {
     private WorldConfiguration config;
     private AbstractWorldMap worldMap;
     public Simulation(WorldConfiguration config) {
-        this.config = config;
-        if(config.mapVariant() == MapVariant.NORMAL){
-            AbstractWorldMap worldMap = new GlobeMap(config.mapWidth(), config.mapHeight());
+        try {
+            System.out.println(config.toString());
+            this.config = config;
+            if(config.mapVariant() == MapVariant.NORMAL){
+                this.worldMap = new GlobeMap(config.mapWidth(), config.mapHeight());
+            }
+            else{
+                this.worldMap = new FireMap(config.mapWidth(), config.mapHeight(), config.burnTime(), config.fireFrequency());
+            }
+            this.worldMap.createMap(config.animalStart(), config.plantStart(), config.animalStartEnergy(), config.animalGenotypeLength());
+            Animal.setChildrenEnergy(config.animalEnergyUsedToReproduce());
+            Genotype.setMinMutateNumber(config.animalMutationMinimum());
+            Genotype.setMaxMutateNumber(config.animalMutationMaximum());
+            Genotype.setGenomeVariant(config.genomeVariant());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-        else{
-            AbstractWorldMap worldMap = new FireMap(config.mapWidth(), config.mapHeight(), config.burnTime(), config.fireFrequency());
-        }
-        worldMap.createMap(config.animalStart(), config.plantStart(), config.animalStartEnergy(), config.animalGenotypeLength());
-        Animal.setChildrenEnergy(config.animalEnergyUsedToReproduce());
-        Genotype.setMinMutateNumber(config.animalMutationMinimum());
-        Genotype.setMaxMutateNumber(config.animalMutationMaximum());
-        Genotype.setGenomeVariant(config.genomeVariant());
     }
+
+    public AbstractWorldMap getWorldMap() {
+        return worldMap;
+    }
+
     @Override
     public void run() {
         worldMap.removeDeadAnimals();

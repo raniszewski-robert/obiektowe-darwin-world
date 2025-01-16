@@ -36,6 +36,10 @@ public abstract class AbstractWorldMap implements WorldMap {
         return mapSquares.values();
     }
 
+    public HashMap<Vector2d, Square> getMapSquares() {
+        return mapSquares;
+    }
+
     @Override
     public Boundary getCurrentBounds() {
         return new Boundary(new Vector2d(0,0), new Vector2d(width-1, height-1));
@@ -86,7 +90,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     @Override
     public boolean isInMap(Vector2d position) {
-        return (position.follows(lowerLeft) && position.follows(upperRight));
+        return (position.follows(lowerLeft) && position.precedes(upperRight));
     }
 
     private boolean isInJungle(Vector2d position) {
@@ -103,7 +107,7 @@ public abstract class AbstractWorldMap implements WorldMap {
             do {
                 int x = random.nextInt(width);
                 int y = random.nextInt(height);
-                position = new Vector2d(x, y);
+                position = this.getRandomPosition();
                 currentSquare = this.mapSquares.get(position);
                 chance = isInJungle(position) ? 0.8 : 0.2; // 80% dla dżungli, 20% poza
             } while ((currentSquare != null && currentSquare.hasPlant()) || random.nextDouble() > chance);
@@ -147,8 +151,8 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     public Vector2d getRandomPosition() {
         Random random = new Random();
-        int x = random.nextInt(width+1) + lowerLeft.getX();
-        int y = random.nextInt(height+1) + lowerLeft.getY();
+        int x = random.nextInt(width) + lowerLeft.getX();
+        int y = random.nextInt(height) + lowerLeft.getY();
         return new Vector2d(x, y);
     }
 
