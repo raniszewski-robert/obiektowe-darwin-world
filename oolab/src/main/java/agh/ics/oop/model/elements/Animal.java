@@ -23,7 +23,7 @@ public class Animal {
         this.plantCount = 0;
         Genotype genotype = new Genotype(genotypeSize);
         Random random = new Random();
-        genotype.setCurrentGenomeIndex(random.nextInt(0, genotypeSize+ 1));
+        genotype.setCurrentGenomeIndex(random.nextInt(0, genotypeSize));
         this.genotype = genotype;
         int direction = random.nextInt(0, 8);
         this.direction = direction;
@@ -58,8 +58,8 @@ public class Animal {
     public void move(WorldMap map){
         int currentDirection = this.direction;
         int currentGenotypeIndex = genotype.getCurrentGenomeIndex();
-        int currentDirectionChange = genotype.getGenome().get(currentGenotypeIndex);
-
+        int currentDirectionChange = 0;
+        currentDirectionChange = genotype.getGenome().get(currentGenotypeIndex);
         currentDirection += currentDirectionChange;
         currentDirection %= 8;
         this.direction = currentDirection;
@@ -119,13 +119,13 @@ public class Animal {
                 } else {
                     moveVector = this.position.add(new Vector2d(1, 1));
                     moveVector = new Vector2d(moveVector.getX() % x, moveVector.getY());
-                    this.position.add(moveVector);
+                    this.position = moveVector;
                 }
             }
             case 2 -> {
                 moveVector = this.position.add(new Vector2d(1, 0));
                 moveVector = new Vector2d(moveVector.getX() % x, moveVector.getY());
-                this.position.add(moveVector);
+                this.position = moveVector;
                 }
             case 3 -> {
                 if ((this.position.getY() - 1) < 0) {
@@ -133,7 +133,7 @@ public class Animal {
                 } else {
                     moveVector = this.position.add(new Vector2d(1, -1));
                     moveVector = new Vector2d(moveVector.getX() % x, moveVector.getY());
-                    this.position.add(moveVector);
+                    this.position = moveVector;
                 }
             }
             case 4 -> {
@@ -149,22 +149,22 @@ public class Animal {
                     this.direction = 0;
                 } else {
                     moveVector = this.position.add(new Vector2d(-1, -1));
-                    moveVector = new Vector2d(moveVector.getX() % x, moveVector.getY());
-                    this.position.add(moveVector);
+                    moveVector = new Vector2d((moveVector.getX()+x) % x, moveVector.getY());
+                    this.position = moveVector;
                 }
             }
             case 6 -> {
                 moveVector = this.position.add(new Vector2d(-1, 0));
-                moveVector = new Vector2d(moveVector.getX() % x, moveVector.getY());
-                this.position.add(moveVector);
+                moveVector = new Vector2d((moveVector.getX()+x) % x, moveVector.getY());
+                this.position = moveVector;
             }
             case 7 -> {
                 if ((this.position.getY() + 1) >= y) {
                     this.direction = 4;
                 } else {
                     moveVector = this.position.add(new Vector2d(-1, 1));
-                    moveVector = new Vector2d(moveVector.getX() % x, moveVector.getY());
-                    this.position.add(moveVector);
+                    moveVector = new Vector2d((moveVector.getX()+x) % x, moveVector.getY());
+                    this.position = moveVector;
                 }
             }
         }
