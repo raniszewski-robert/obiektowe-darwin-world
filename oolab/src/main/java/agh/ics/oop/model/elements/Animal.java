@@ -3,6 +3,8 @@ package agh.ics.oop.model.elements;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.interfaces.WorldMap;
 
+import java.util.Random;
+
 public class Animal {
     private int direction;
     private Vector2d position;
@@ -12,15 +14,29 @@ public class Animal {
     private int age;
     private int childrenCount;
     private int plantCount;
-    private static ThreadLocal<Integer> childrenEnergy = ThreadLocal.withInitial(() -> 0);
-    public Animal(int direction, Vector2d position, int energy, Genotype genotype) {
-        this.direction = direction;
+    private static final ThreadLocal<Integer> childrenEnergy = ThreadLocal.withInitial(() -> 0);
+    public Animal(Vector2d position, int energy, int genotypeSize) {
         this.position = position;
         this.energy = energy;
-        this.genotype = genotype;
         this.age = 0;
         this.childrenCount = 0;
         this.plantCount = 0;
+        Genotype genotype = new Genotype(genotypeSize);
+        Random random = new Random();
+        genotype.setCurrentGenomeIndex(random.nextInt(0, genotypeSize+ 1));
+        this.genotype = genotype;
+        int direction = random.nextInt(0, 8);
+        this.direction = direction;
+    }
+    public Animal(Vector2d position, int energy, Genotype genotype) {
+        this.position = position;
+        this.energy = energy;
+        this.age = 0;
+        this.childrenCount = 0;
+        this.plantCount = 0;
+        this.genotype = genotype;
+        Random random = new Random();
+        this.direction = random.nextInt(0, 8);
     }
 
     public boolean isDead(){
@@ -56,10 +72,6 @@ public class Animal {
         return position;
     }
 
-    public void setPosition(Vector2d position) {
-        this.position = position;
-    }
-
     public int getAge() {
         return age;
     }
@@ -87,12 +99,6 @@ public class Animal {
     public void addPlantCount() {
         this.plantCount += 1;
     }
-
-    public void changeEnergy(int energy){
-        this.energy += energy;
-    }
-
-
 
     private void moveInDirection(WorldMap map) {
         int y = map.getCurrentBounds().upperRight().getY();
@@ -163,7 +169,6 @@ public class Animal {
             }
         }
     }
-
     public Animal createChild(Animal otherParent) {
         int sumOfEnergy = this.energy + otherParent.energy;
         float energyPercent = (float) this.energy / sumOfEnergy;
@@ -175,6 +180,7 @@ public class Animal {
         this.childrenCount += 1;
         otherParent.childrenCount += 1;
 
-        return new Animal(0, this.position, childrenEnergy.get()*2, childGenotype);
+        return new Animal(this.position, childrenEnergy.get()*2, childGenotype);
     }
+
 }

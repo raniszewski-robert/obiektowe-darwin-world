@@ -137,8 +137,8 @@ public abstract class AbstractWorldMap implements WorldMap {
     public void createAnimals(int numberOfAnimals, int genomeSize, int startEnergy) {
         for(int i = 0; i < numberOfAnimals; i++){
             Vector2d position = this.getRandomPosition();
-            Genotype genotype = new Genotype(genomeSize);
-            Animal newAnimal = new Animal(0, position, startEnergy, genotype);
+
+            Animal newAnimal = new Animal(position, startEnergy, genomeSize);
             Square newSquare = new Square();
             newSquare.addAnimal(newAnimal);
             this.place(newSquare, position);
