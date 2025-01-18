@@ -194,12 +194,11 @@ public abstract class AbstractWorldMap implements WorldMap {
         if(oldSquare != null){
             oldSquare.removeAnimal(animal);
             if(!oldSquare.hasPlant() && oldSquare.getAnimals().isEmpty()){
-                this.mapSquares.remove(animal.getPosition());
+                //this.mapSquares.remove(animal.getPosition());
             }
         }
 
         Square newSquare = this.mapSquares.get(newPosition);
-
         if(newSquare == null){
             newSquare = new Square();
             newSquare.addAnimal(animal);
