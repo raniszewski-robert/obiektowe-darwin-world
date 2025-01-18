@@ -85,6 +85,7 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
     private Image dirt = new Image("dirt.png");
     private Image grass = new Image("grass.png");
     private Image animal = new Image("animal.png");
+    private Image fire = new Image("fire.png");
     private List<Image> animalImages = new ArrayList<>();
     private int energyForBeingFull;
     Statistics stats;
@@ -157,8 +158,12 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
                 System.out.println(e.getMessage());
             }
             Square square = entry.getValue();
+
             if(square.hasPlant()){
                 imageView.setImage(grass);
+                if(square.onFire()) {
+                    imageView.setImage(fire);
+                }
             }
             if(!square.getAnimals().isEmpty()){
                     imageView.setImage(animal);

@@ -38,19 +38,26 @@ public class Simulation implements Runnable {
 
     @Override
     public void run() {
+        int turnCounter = 0;
         while (true) {
             worldMap.removeDeadAnimals();
             worldMap.moveAllAnimals();
             worldMap.eatPlants(config.plantEnergy());
             worldMap.copulationAllAnimals(config.energyAllowingReproduction());
             worldMap.growPlants(config.plantDaily());
+            if (worldMap instanceof FireMap){
+                ((FireMap) worldMap).spreadFire();
+                if (turnCounter % config.fireFrequency() == 0) { // Execute every `fireFrequency` turns
+                    ((FireMap) worldMap).startFire();
+                }
+            }
             worldMap.mapChanged();
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+            turnCounter++;
         }
     }
-
 }
