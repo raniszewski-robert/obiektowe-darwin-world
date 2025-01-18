@@ -1,9 +1,6 @@
 package agh.ics.oop.model.presenter;
 
-import agh.ics.oop.model.AbstractWorldMap;
-import agh.ics.oop.model.Simulation;
-import agh.ics.oop.model.SimulationEngine;
-import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.*;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Square;
 import agh.ics.oop.model.interfaces.MapChangeListener;
@@ -90,7 +87,7 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
     private Image animal = new Image("animal.png");
     private List<Image> animalImages = new ArrayList<>();
     private int energyForBeingFull;
-
+    Statistics stats;
 
     //przesunięcie GridPane
     private double translateX = 0;
@@ -105,6 +102,7 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
         width = config.mapWidth();
         Simulation simulation = new Simulation(config, this);
         this.worldMap = simulation.getWorldMap();
+        stats = new Statistics(worldMap);
         drawEmptyMap();
         SimulationEngine simulationEngine = new SimulationEngine();
         simulationEngine.runAsyncInThreadPool(List.of(simulation));
@@ -197,9 +195,6 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
 
     @Override
     public void mapChanged(WorldMap worldMap, List<String> messages, List<Vector2d> list) {
-        Platform.runLater(()-> {
-            System.out.println(this.worldMap.getAnimals().size());
-            drawMap();
-        });
+        Platform.runLater(this::drawMap);
     }
 }

@@ -101,4 +101,15 @@ public class Statistics {
         if(counter == 0) return 0;
         return Math.round(sum/counter * 100.0) / 100.0;
     }
+
+    @Override
+    public String toString() {
+        return "count animals: " + countAnimals() + "\n" + "count plants" + countPlants() + "\n"
+                + "count squares: " + countFreeSquares() + "\n" + "average energy: " + getAverageEnergy() + "\n"
+                + "average life length: " + getAverageLifeLength()
+                + "\n" + "average children count: " + getAverageChildrenCount()
+                + "\n" + "average children life length: " + getAverageLifeLength()
+                + "\n" + "average children children count: " + getAverageChildrenCount();
+    }
+
 }

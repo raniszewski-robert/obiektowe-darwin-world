@@ -16,25 +16,21 @@ public class Animal {
     private int plantCount;
     private static final ThreadLocal<Integer> childrenEnergy = ThreadLocal.withInitial(() -> 0);
     public Animal(Vector2d position, int energy, int genotypeSize) {
-        this.position = position;
-        this.energy = energy;
-        this.age = 0;
-        this.childrenCount = 0;
-        this.plantCount = 0;
-        Genotype genotype = new Genotype(genotypeSize);
+        this(position, energy, new Genotype(genotypeSize));
         Random random = new Random();
-        genotype.setCurrentGenomeIndex(random.nextInt(0, genotypeSize));
-        this.genotype = genotype;
-        int direction = random.nextInt(0, 8);
-        this.direction = direction;
+        this.genotype.setCurrentGenomeIndex(random.nextInt(0, genotypeSize));
     }
     public Animal(Vector2d position, int energy, Genotype genotype) {
+        initializeCommonFields(position, energy);
+        this.genotype = genotype;
+    }
+    // Metoda inicjalizująca wspólne pola
+    private void initializeCommonFields(Vector2d position, int energy) {
         this.position = position;
         this.energy = energy;
         this.age = 0;
         this.childrenCount = 0;
         this.plantCount = 0;
-        this.genotype = genotype;
         Random random = new Random();
         this.direction = random.nextInt(0, 8);
     }
@@ -86,10 +82,6 @@ public class Animal {
 
     public Genotype getGenotype() {
         return genotype;
-    }
-
-    public void setChildrenCount(int childrenCount) {
-        this.childrenCount = childrenCount;
     }
 
     public int getPlantCount() {

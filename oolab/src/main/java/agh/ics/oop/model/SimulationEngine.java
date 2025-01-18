@@ -11,6 +11,5 @@ public class SimulationEngine {
             executorService.submit(simulation);
         }
         executorService.shutdown();
-//        executorService.awaitTermination(5, TimeUnit.MINUTES);
     }
 }

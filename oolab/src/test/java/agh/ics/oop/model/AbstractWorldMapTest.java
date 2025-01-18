@@ -51,16 +51,15 @@ public class AbstractWorldMapTest {
 
     @Test
     public void testPlaceAnimalOnMap() {
-        AbstractWorldMap map = new TestWorldMap(10, 10);
+        AbstractWorldMap map = new GlobeMap(10, 10);
         Vector2d position = new Vector2d(3, 3);
         Animal animal = new Animal(position, 100, 5);
         Square square = new Square();
         square.addAnimal(animal);
-
+        map.createAnimals(10, 10, 10);
         boolean result = map.place(square, position);
-
         assertTrue(result);
-        assertEquals(1, map.getAnimals().size());
+        assertEquals(11, map.getAnimals().size());
         assertTrue(map.getAnimals().contains(animal));
     }
 
@@ -212,7 +211,7 @@ public class AbstractWorldMapTest {
 
         map.place(square, new Vector2d(2, 2));
         map.eatPlants(3);
-
+        assertEquals(53, animal.getEnergy());
         assertFalse(square.hasPlant());
     }
 

@@ -9,7 +9,9 @@ public class Square {
     private Fire fire;
     public Square() {
         this.plant = null;
-        this.animals = new PriorityQueue<>(Comparator.comparingInt(Animal::getEnergy).reversed());
+        this.animals = new PriorityQueue<>(Comparator.comparingInt(Animal::getEnergy).reversed()
+                .thenComparingInt(Animal::getAge).reversed()
+                .thenComparingInt(Animal::getChildrenCount).reversed());
         this.fire = null;
     }
 

@@ -29,7 +29,6 @@ public class SimulationStartPresenter extends SimulationPresenter {
     @FXML private Spinner<Integer> animalStartSpinner;
     @FXML private Spinner<Integer> animalStartEnergySpinner;
     @FXML private Spinner<Integer> energyAllowingReproductionSpinner;
-    @FXML private Spinner<Integer> animalEnergyDailySpinner;
     @FXML private Spinner<Integer> animalEnergyUsedToReproduceSpinner;
     @FXML private Spinner<Integer> animalGenotypeLengthSpinner;
     @FXML private Spinner<Integer> animalMutationMinimumSpinner;
@@ -51,7 +50,6 @@ public class SimulationStartPresenter extends SimulationPresenter {
                     animalStartSpinner.getValue(),
                     animalStartEnergySpinner.getValue(),
                     energyAllowingReproductionSpinner.getValue(),
-                    animalEnergyDailySpinner.getValue(),
                     animalEnergyUsedToReproduceSpinner.getValue(),
                     animalMutationMinimumSpinner.getValue(),
                     animalMutationMaximumSpinner.getValue(),

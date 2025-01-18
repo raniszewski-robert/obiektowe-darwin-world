@@ -81,8 +81,6 @@
                 <!-- Energia zwierząt -->
                 <Label text="Energia potrzebna do rozmnażania:" />
                 <Spinner fx:id="energyAllowingReproductionSpinner" editable="true" initialValue="10" min="0" max="1000" />
-                <Label text="Energia dzienna zużywana przez zwierzę:" />
-                <Spinner fx:id="animalEnergyDailySpinner" editable="true" initialValue="10" min="0" max="1000" />
                 <Label text="Energia rodziców dla potomka:" />
                 <Spinner fx:id="animalEnergyUsedToReproduceSpinner" editable="true" initialValue="10" min="0" max="1000" />
             </VBox>

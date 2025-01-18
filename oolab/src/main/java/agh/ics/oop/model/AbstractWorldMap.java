@@ -142,13 +142,18 @@ public abstract class AbstractWorldMap implements WorldMap {
                     int animalEnergy = strongestAnimal.getEnergy();
                     int newAnimalEnergy = animalEnergy + plantEnergy;
                     strongestAnimal.setEnergy(newAnimalEnergy);
+
+
                     System.out.println(strongestAnimal.getEnergy());
                     strongestAnimal.addPlantCount();
                     this.plants.remove(currPlant);
                     square.removePlant();
                 }
             }
+
         }
+
+
         int plantsnumber = 0;
         for (Square square : getAllSquares()) {
             if (square.hasPlant()){
@@ -182,19 +187,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     public void moveAnimal(Animal animal){
-        if (animal.isDead()){
-            Square oldSquare = this.mapSquares.get(animal.getPosition());
-            if(oldSquare != null){
-                oldSquare.removeAnimal(animal);
-                if(!oldSquare.hasPlant() && oldSquare.getAnimals().isEmpty()){
-                    this.mapSquares.remove(animal.getPosition());
-                }
-            }
-            return;
-        }
-
         Square oldSquare = this.mapSquares.get(animal.getPosition());
-
         animal.move(this);
         Vector2d newPosition = animal.getPosition();
 
