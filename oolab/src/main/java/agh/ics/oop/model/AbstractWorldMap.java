@@ -6,6 +6,7 @@ import agh.ics.oop.model.interfaces.MapChangeListener;
 import agh.ics.oop.model.interfaces.WorldMap;
 import agh.ics.oop.model.records.Boundary;
 
+import java.sql.SQLOutput;
 import java.util.*;
 
 public abstract class AbstractWorldMap implements WorldMap {
@@ -21,6 +22,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected final HashMap<Vector2d, Square> mapSquares;
     public int width;
     public int height;
+    private int freeFields;
 
     protected AbstractWorldMap(int width, int height) {
         this.width = width;
@@ -31,7 +33,8 @@ public abstract class AbstractWorldMap implements WorldMap {
         this.jungleLowerY = (int) (0.4 * height);
         this.jungleUpperY = (int) (0.6 * height) - 1;
         this.lowerLeft = new Vector2d(0, 0);
-        this.upperRight = new Vector2d(this.width-1, this.height-1);
+        this.upperRight = new Vector2d(this.width, this.height);
+        this.freeFields = width * height;
     }
 
     public Collection<Square> getAllSquares(){
@@ -44,7 +47,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     @Override
     public Boundary getCurrentBounds() {
-        return new Boundary(new Vector2d(0,0), new Vector2d(width-1, height-1));
+        return new Boundary(new Vector2d(0,0), new Vector2d(width, height));
     }
 
     public List<Animal> getAnimals() {
@@ -104,6 +107,9 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     public void growPlants(int numberOfPlants) {
+        if (freeFields < numberOfPlants) {
+            numberOfPlants = freeFields;
+        }
         for(int i = 0; i < numberOfPlants; i++) {
             Random random = new Random();
             Vector2d position;
@@ -131,19 +137,25 @@ public abstract class AbstractWorldMap implements WorldMap {
             if (square.hasPlant()){
                 Plant currPlant = square.getPlant();
                 PriorityQueue<Animal> currAnimals = new PriorityQueue<>(square.getAnimalsAsQueue());
-
                 if (!currAnimals.isEmpty()) {
-                    Animal strongestAnimal = (Animal) currAnimals.poll();
+                    Animal strongestAnimal = currAnimals.poll();
                     int animalEnergy = strongestAnimal.getEnergy();
                     int newAnimalEnergy = animalEnergy + plantEnergy;
                     strongestAnimal.setEnergy(newAnimalEnergy);
                     System.out.println(strongestAnimal.getEnergy());
                     strongestAnimal.addPlantCount();
-                    square.setPlant(null);
                     this.plants.remove(currPlant);
+                    square.removePlant();
                 }
             }
         }
+        int plantsnumber = 0;
+        for (Square square : getAllSquares()) {
+            if (square.hasPlant()){
+                plantsnumber++;
+            }
+        }
+        freeFields = (width * height) - plantsnumber;
     }
 
     public void createAnimals(int numberOfAnimals, int genomeSize, int startEnergy) {

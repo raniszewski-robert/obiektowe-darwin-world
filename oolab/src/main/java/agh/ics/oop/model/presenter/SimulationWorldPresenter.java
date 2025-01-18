@@ -162,11 +162,10 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
             if(square.hasPlant()){
                 imageView.setImage(grass);
             }
-            else{
-                if(!square.getAnimals().isEmpty()){
+            if(!square.getAnimals().isEmpty()){
                     imageView.setImage(animal);
-                }
             }
+
         }
     }
     private void handleMouseClick(int finalRow, int finalCol) {

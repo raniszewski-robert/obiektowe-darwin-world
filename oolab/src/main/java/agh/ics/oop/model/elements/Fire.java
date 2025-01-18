@@ -19,6 +19,10 @@ public class Fire {
         return position;
     }
 
+    public int getRemainingTurns() {
+        return remainingTurns;
+    }
+
     public boolean isDead() {
         return remainingTurns <= 0;
     }

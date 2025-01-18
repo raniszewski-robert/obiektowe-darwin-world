@@ -4,7 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f5c65f8a-cd26-4157-b746-b5b1075fd151" name="Changes" comment="" />
+    <list default="true" id="f5c65f8a-cd26-4157-b746-b5b1075fd151" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules/oolab.test.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/oolab/src/test/java/agh/ics/oop/model/FireMapTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/oolab/src/main/java/agh/ics/oop/model/AbstractWorldMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/oolab/src/main/java/agh/ics/oop/model/AbstractWorldMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/oolab/src/main/java/agh/ics/oop/model/FireMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/oolab/src/main/java/agh/ics/oop/model/FireMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/oolab/src/main/java/agh/ics/oop/model/elements/Fire.java" beforeDir="false" afterPath="$PROJECT_DIR$/oolab/src/main/java/agh/ics/oop/model/elements/Fire.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/oolab/src/main/java/agh/ics/oop/model/elements/Square.java" beforeDir="false" afterPath="$PROJECT_DIR$/oolab/src/main/java/agh/ics/oop/model/elements/Square.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/oolab/src/main/java/agh/ics/oop/model/presenter/SimulationWorldPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/oolab/src/main/java/agh/ics/oop/model/presenter/SimulationWorldPresenter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/oolab/src/test/java/agh/ics/oop/model/AbstractWorldMapTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/oolab/src/test/java/agh/ics/oop/model/AbstractWorldMapTest.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,6 +30,9 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
+        <task path="$PROJECT_DIR$/oolab">
+          <activation />
+        </task>
         <projects_view>
           <tree_state>
             <expand>
@@ -36,11 +51,17 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
+        <option value="JUnit5 Test Class" />
         <option value="Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="Animals" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
@@ -54,9 +75,26 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Downloaded.Files.Path.Enabled": "false",
+    "Gradle.AbstractWorldMapTest.executor": "Run",
+    "Gradle.AbstractWorldMapTest.testEatPlants.executor": "Run",
+    "Gradle.AbstractWorldMapTest.testGrowAllPlants.executor": "Run",
+    "Gradle.FireMapTest.executor": "Run",
+    "Gradle.FireMapTest.testFireMap.executor": "Run",
+    "Gradle.FireMapTest.testFireSpread.executor": "Run",
+    "Gradle.oolab [:agh.ics.oop.World.main()].executor": "Run",
+    "Gradle.oolab [:agh.ics.oop.model.AnimalTest.main()].executor": "Run",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
+    "create.test.in.the.same.root": "true",
+    "git-widget-placeholder": "tests",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/adasg/Documents/PO_2024_PN1830_GLOWACKI",
+    "last_opened_file_path": "C:/Users/adasg/Documents/obiektowe-darwin-world1",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -65,6 +103,124 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="agh.ics.oop.model" />
+      <recent name="agh.ics.oop.model.elements" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.AnimalTest">
+    <configuration name="AnimalTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="agh.ics.oop.model.AnimalTest" />
+      <module name="oolab.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="agh.ics.oop.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="World" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="agh.ics.oop.World" />
+      <module name="oolab.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="agh.ics.oop.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AbstractWorldMapTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/oolab" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;agh.ics.oop.model.AbstractWorldMapTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="FireMapTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/oolab" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;agh.ics.oop.model.FireMapTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="FireMapTest.testFireSpread" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/oolab" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;agh.ics.oop.model.FireMapTest.testFireSpread&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.AnimalTest" />
+        <item itemvalue="Gradle.AbstractWorldMapTest" />
+        <item itemvalue="Gradle.FireMapTest.testFireSpread" />
+        <item itemvalue="Gradle.FireMapTest" />
+        <item itemvalue="Application.World" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -83,10 +239,22 @@
       <updated>1734286560197</updated>
       <workItem from="1734286561861" duration="12619000" />
       <workItem from="1734370502543" duration="1763000" />
+      <workItem from="1735994831457" duration="20879000" />
+      <workItem from="1736078278622" duration="4422000" />
+      <workItem from="1736272579635" duration="723000" />
+      <workItem from="1736789920534" duration="916000" />
+      <workItem from="1736790852418" duration="100000" />
+      <workItem from="1736791005352" duration="888000" />
+      <workItem from="1736792025327" duration="329000" />
+      <workItem from="1736792490635" duration="73000" />
+      <workItem from="1737133325749" duration="26136000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/oolab$AbstractWorldMapTest.ic" NAME="AbstractWorldMapTest Coverage Results" MODIFIED="1737158109260" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
   </component>
 </project>

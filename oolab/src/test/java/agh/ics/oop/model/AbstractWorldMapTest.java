@@ -197,5 +197,34 @@ public class AbstractWorldMapTest {
         }
 
     }
+
+    @Test
+    public void testEatPlants() {
+        AbstractWorldMap map = new TestWorldMap(10, 10);
+        Animal animal = new Animal(new Vector2d(2, 2), 50, 5);
+        Plant plant = new Plant(new Vector2d(2,2));
+
+        Square square = new Square();
+        square.addAnimal(animal);
+        square.addPlant(plant);
+
+        assertTrue(square.hasPlant());
+
+        map.place(square, new Vector2d(2, 2));
+        map.eatPlants(3);
+
+        assertFalse(square.hasPlant());
+    }
+
+    @Test
+    public void testGrowAllPlants() {
+        AbstractWorldMap map = new GlobeMap(10, 10);
+        map.growPlants(100);
+    }
+
+    @Test
+    public void testSquares() {
+
+    }
 }
 
