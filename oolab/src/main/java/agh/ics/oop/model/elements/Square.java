@@ -37,4 +37,5 @@ public class Square {
     public void addFire(Fire fire) {this.fire = fire;}
     public void removeFire() {this.fire = null;}
     public boolean onFire() {return this.fire != null;}
+    public Fire getFire() {return this.fire;}
 }
