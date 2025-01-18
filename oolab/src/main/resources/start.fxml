@@ -20,9 +20,9 @@
             <VBox spacing="15" alignment="CENTER_LEFT">
                 <!-- Wymiary mapy -->
                 <Label text="Szerokość mapy:" />
-                <Spinner fx:id="mapWidthSpinner" editable="true" initialValue="10" min="0" max="1000" />
+                <Spinner fx:id="mapWidthSpinner" editable="true" initialValue="50" min="0" max="1000" />
                 <Label text="Wysokość mapy:" />
-                <Spinner fx:id="mapHeightSpinner" editable="true" initialValue="10" min="0" max="1000" />
+                <Spinner fx:id="mapHeightSpinner" editable="true" initialValue="30" min="0" max="1000" />
 
                 <!-- Wariant mapy -->
                 <Label text="Wariant mapy:" />
@@ -37,29 +37,29 @@
 
                 <!-- Roślinność -->
                 <Label text="Początkowa liczba roślin:" />
-                <Spinner fx:id="plantStartSpinner" editable="true" initialValue="10" min="0" max="1000" />
+                <Spinner fx:id="plantStartSpinner" editable="true" initialValue="50" min="0" max="1000" />
                 <Label text="Liczba roślin wyrastających na dzień:" />
                 <Spinner fx:id="plantDailySpinner" editable="true" initialValue="10" min="0" max="1000" />
 
                 <!-- Energia roślin -->
                 <Label text="Energia zjedzonej rośliny:" />
-                <Spinner fx:id="plantEnergySpinner" editable="true" initialValue="10" min="0" max="1000" />
+                <Spinner fx:id="plantEnergySpinner" editable="true" initialValue="20" min="0" max="1000" />
 
                 <!-- Zwierzaki -->
                 <Label text="Startowa liczba zwierząt:" />
-                <Spinner fx:id="animalStartSpinner" editable="true" initialValue="10" min="0" max="1000" />
+                <Spinner fx:id="animalStartSpinner" editable="true" initialValue="100" min="0" max="1000" />
                 <Label text="Energia startowa zwierząt:" />
-                <Spinner fx:id="animalStartEnergySpinner" editable="true" initialValue="10" min="0" max="1000" />
+                <Spinner fx:id="animalStartEnergySpinner" editable="true" initialValue="20" min="0" max="1000" />
             </VBox>
 
             <VBox spacing="15" alignment="CENTER_LEFT">
                 <!-- Genotyp i mutacje -->
                 <Label text="Długość genomu:" />
-                <Spinner fx:id="animalGenotypeLengthSpinner" editable="true" initialValue="10" min="0" max="1000" />
+                <Spinner fx:id="animalGenotypeLengthSpinner" editable="true" initialValue="5" min="0" max="100" />
                 <Label text="Minimalna liczba mutacji:" />
-                <Spinner fx:id="animalMutationMinimumSpinner" editable="true" initialValue="10" min="0" max="1000" />
+                <Spinner fx:id="animalMutationMinimumSpinner" editable="true" initialValue="0" min="0" max="100" />
                 <Label text="Maksymalna liczba mutacji:" />
-                <Spinner fx:id="animalMutationMaximumSpinner" editable="true" initialValue="10" min="0" max="1000" />
+                <Spinner fx:id="animalMutationMaximumSpinner" editable="true" initialValue="10" min="0" max="100" />
 
                 <!-- Wariant genomu -->
                 <Label text="Wariant genomu zwierząt:" />
@@ -80,7 +80,7 @@
 
                 <!-- Energia zwierząt -->
                 <Label text="Energia potrzebna do rozmnażania:" />
-                <Spinner fx:id="energyAllowingReproductionSpinner" editable="true" initialValue="10" min="0" max="1000" />
+                <Spinner fx:id="energyAllowingReproductionSpinner" editable="true" initialValue="20" min="0" max="1000" />
                 <Label text="Energia rodziców dla potomka:" />
                 <Spinner fx:id="animalEnergyUsedToReproduceSpinner" editable="true" initialValue="10" min="0" max="1000" />
             </VBox>
