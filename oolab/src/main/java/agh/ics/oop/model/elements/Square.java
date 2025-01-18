@@ -34,8 +34,7 @@ public class Square {
     public List<Animal> getAnimals() {return List.copyOf(animals);}
 
     public PriorityQueue<Animal> getAnimalsAsQueue() {return this.animals;}
-    public void setPlant(Plant plant) {this.plant = plant;}
-
+    public boolean isEmpty() {return this.animals.isEmpty() && this.plant == null && this.fire == null;}
     public void addFire(Fire fire) {this.fire = fire;}
     public void removeFire() {this.fire = null;}
     public boolean onFire() {return this.fire != null;}

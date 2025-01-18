@@ -11,9 +11,8 @@ public class FireMap extends AbstractWorldMap{
     public int burnTime;
     public int fireFrequency;
 
-
-    protected FireMap(int width, int height, int burnTime, int fireFrequency) {
-        super(width, height);
+    protected FireMap(int width, int height, GenomeVariant genomeVariant, int burnTime, int fireFrequency) {
+        super(width, height, genomeVariant);
         this.fires = new ArrayList<>();
         this.firePositions = new HashSet<>();
         this.burnTime = burnTime;
@@ -45,7 +44,7 @@ public class FireMap extends AbstractWorldMap{
 
             for (Vector2d neighbor : neighbors) {
                 Square square = mapSquares.get(neighbor);
-                if (square != null && square.hasPlant() && !square.onFire() && !firePositions.contains(neighbor)) {
+                if (square.hasPlant() && !square.onFire() && !firePositions.contains(neighbor)) {
                     newFires.add(new Fire(neighbor, burnTime));
                     square.addFire(new Fire(neighbor, burnTime));
                     firePositions.add(neighbor);
@@ -54,7 +53,7 @@ public class FireMap extends AbstractWorldMap{
 
             Square currSquare = mapSquares.get(position);
 
-            if (currSquare != null && currSquare.getAnimals() != null) {
+            if (currSquare.getAnimals() != null) {
                 for (Animal animal : currSquare.getAnimals()) {
                     this.animals.remove(animal);
                     this.getDeadAnimals().add(animal);
@@ -67,10 +66,8 @@ public class FireMap extends AbstractWorldMap{
             if (fire.isDead()) {
                 deadFires.add(fire);
                 Plant currPlant = currSquare.getPlant();
-                plants.remove(currPlant);
-                currSquare.removePlant();
+                removePlant(currPlant);
                 currSquare.removeFire();
-                mapSquares.remove(position);
                 firePositions.remove(fire.getPosition());
             }
         }

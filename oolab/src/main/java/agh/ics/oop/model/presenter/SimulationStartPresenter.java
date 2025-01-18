@@ -4,20 +4,14 @@ import agh.ics.oop.model.SimulationApp;
 import agh.ics.oop.model.enums.GenomeVariant;
 import agh.ics.oop.model.enums.MapVariant;
 import agh.ics.oop.model.records.WorldConfiguration;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Spinner;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-
-import javax.swing.*;
 import java.io.IOException;
-import java.util.List;
 
 public class SimulationStartPresenter extends SimulationPresenter {
     @FXML private Spinner<Integer> mapWidthSpinner;
@@ -58,7 +52,6 @@ public class SimulationStartPresenter extends SimulationPresenter {
                     burnTimeSpinner.getValue(),
                     GenomeVariant.parser(genomeVariantChoice.getValue())
             );
-
             openNewWindow(configuration);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -75,8 +68,6 @@ public class SimulationStartPresenter extends SimulationPresenter {
         SimulationApp.configureStage(additionalStage, viewRoot);
         additionalStage.show();
 
-
         additionalPresenter.startSimulation(config);
-
     }
 }

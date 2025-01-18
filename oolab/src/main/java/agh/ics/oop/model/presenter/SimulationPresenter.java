@@ -10,9 +10,6 @@ import javafx.stage.Stage;
 import java.util.Set;
 
 abstract public class SimulationPresenter extends Stage {
-    @FXML
-    protected Pane rootPane;
-
     protected void showAlert(String header, String title, String content, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setHeaderText(header);
@@ -20,5 +17,4 @@ abstract public class SimulationPresenter extends Stage {
         alert.setContentText(content);
         alert.showAndWait();
     }
-
 }

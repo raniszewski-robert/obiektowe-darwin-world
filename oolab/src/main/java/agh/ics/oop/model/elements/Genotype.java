@@ -10,11 +10,9 @@ import static java.lang.Math.round;
 
 public class Genotype {
     List<Integer> genome;
-    int currentGenomeIndex;
-    int genomeSize;
-    private static ThreadLocal<GenomeVariant> genomeVariant = ThreadLocal.withInitial(() -> GenomeVariant.NORMAL);
-    private static ThreadLocal<Integer> minMutateNumber = ThreadLocal.withInitial(() -> 0);
-    private static ThreadLocal<Integer> maxMutateNumber = ThreadLocal.withInitial(() -> 0);
+    private int currentGenomeIndex;
+    private final int genomeSize;
+
     public Genotype(int genomeSize){
         this.genome = new ArrayList<>();
         this.genomeSize = genomeSize;
@@ -28,32 +26,16 @@ public class Genotype {
         this.currentGenomeIndex = currentGenomeIndex;
     }
 
-    public static void setMinMutateNumber(int minMutateNumber) {
-        Genotype.minMutateNumber.set(minMutateNumber);
-    }
-
-    public static void setMaxMutateNumber(int maxMutateNumber) {
-        Genotype.maxMutateNumber.set(maxMutateNumber);
-    }
-
     public List<Integer> getGenome() {
         return genome;
-    }
-
-    public void setGenome(List<Integer> genome) {
-        this.genome = genome;
-    }
-
-    public static void setGenomeVariant(GenomeVariant genomeVariant) {
-        Genotype.genomeVariant.set(genomeVariant);
     }
 
     public int getCurrentGenomeIndex() {
         return currentGenomeIndex;
     }
 
-    public void indexChange(){
-        switch (genomeVariant.get()){
+    public void indexChange(GenomeVariant genomeVariant) {
+        switch (genomeVariant){
             case NORMAL -> {
                 setCurrentGenomeIndex((this.currentGenomeIndex+1) % genomeSize);}
             case CRAZY -> {
@@ -71,15 +53,6 @@ public class Genotype {
         return genomeSize;
     }
 
-    public void mutate(){
-        Random random = new Random();
-        int mutateNumber = random.nextInt(maxMutateNumber.get() - minMutateNumber.get() + 1) + minMutateNumber.get();
-        for (int i = 0; i < mutateNumber; i++){
-            int index = random.nextInt(0, genomeSize-1);
-            int value = random.nextInt(8);
-            this.genome.set(index, value);
-        }
-    }
     public Genotype createChildGenotype(Genotype otherParentGenotype, float energyPercent){
         int partIndex = (int)(energyPercent * genomeSize);
 
@@ -95,8 +68,7 @@ public class Genotype {
             childGenome.addAll(otherParentGenotype.genome.subList(0, partIndex));
             childGenome.addAll(this.genome.subList(partIndex, genomeSize));
         }
-        childGenotype.setGenome(childGenome);
-        childGenotype.mutate();
+        childGenotype.genome = childGenome;
 
         return childGenotype;
     }

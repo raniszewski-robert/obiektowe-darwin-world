@@ -1,8 +1,11 @@
 package agh.ics.oop.model.elements;
 
+import agh.ics.oop.model.AbstractWorldMap;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.interfaces.WorldMap;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Animal {
@@ -10,37 +13,37 @@ public class Animal {
     private Vector2d position;
     private int energy;
     private final Genotype genotype;
-
+    private List<Animal> children;
     private int age;
     private int childrenCount;
     private int plantCount;
-    private static final ThreadLocal<Integer> childrenEnergy = ThreadLocal.withInitial(() -> 0);
-    public Animal(Vector2d position, int energy, int genotypeSize) {
-        this(position, energy, new Genotype(genotypeSize));
-        Random random = new Random();
-        this.genotype.setCurrentGenomeIndex(random.nextInt(0, genotypeSize));
-    }
-    public Animal(Vector2d position, int energy, Genotype genotype) {
-        initializeCommonFields(position, energy);
-        this.genotype = genotype;
-    }
-    // Metoda inicjalizująca wspólne pola
-    private void initializeCommonFields(Vector2d position, int energy) {
+    private int childrenEnergy;
+
+    // Metoda inicjalizująca wspólne pola konstruktorow
+    private void initializeCommonFields(Vector2d position, int energy, int childrenEnergy) {
         this.position = position;
         this.energy = energy;
+        this.childrenEnergy = childrenEnergy;
         this.age = 0;
         this.childrenCount = 0;
         this.plantCount = 0;
+        this.children = new ArrayList<>();
         Random random = new Random();
         this.direction = random.nextInt(0, 8);
     }
 
-    public boolean isDead(){
-        return energy <= 0;
+    public Animal(Vector2d position, int energy, Genotype genotype, int childrenEnergy) {
+        initializeCommonFields(position, energy, childrenEnergy);
+        this.genotype = genotype;
+    }
+    public Animal(Vector2d position, int energy, int genotypeSize, int childrenEnergy) {
+        this(position, energy, new Genotype(genotypeSize), childrenEnergy);
+        Random random = new Random();
+        this.genotype.setCurrentGenomeIndex(random.nextInt(0, genotypeSize));
     }
 
-    public static void setChildrenEnergy(int childrenEnergy) {
-        Animal.childrenEnergy.set(childrenEnergy);
+    public boolean isDead(){
+        return energy <= 0;
     }
 
     public int getEnergy() {
@@ -51,16 +54,15 @@ public class Animal {
         this.energy = energy;
     }
 
-    public void move(WorldMap map){
+    public void move(AbstractWorldMap map){
         int currentDirection = this.direction;
         int currentGenotypeIndex = genotype.getCurrentGenomeIndex();
-        int currentDirectionChange = 0;
-        currentDirectionChange = genotype.getGenome().get(currentGenotypeIndex);
-        currentDirection += currentDirectionChange;
-        currentDirection %= 8;
-        this.direction = currentDirection;
+        int currentDirectionChange = genotype.getGenome().get(currentGenotypeIndex);
+        this.direction = (currentDirection + currentDirectionChange) % 8;
+
         moveInDirection(map);
-        genotype.indexChange();
+
+        genotype.indexChange(map.getGenomeVariant());
         this.energy -= 1;
     }
 
@@ -94,11 +96,11 @@ public class Animal {
 
     private void moveInDirection(WorldMap map) {
         int y = map.getCurrentBounds().upperRight().getY();
-        int x = map.getCurrentBounds().upperRight().getX();
+        int x = map.getCurrentBounds().upperRight().getX() + 1;
         Vector2d moveVector;
         switch (this.direction) {
             case 0 -> {
-                if ((this.position.getY() + 1) >= y) {
+                if ((this.position.getY() + 1) > y) {
                     this.direction = 4;
                 } else {
                     moveVector = this.position.add(new Vector2d(0, 1));
@@ -106,7 +108,7 @@ public class Animal {
                 }
             }
             case 1 -> {
-                if ((this.position.getY() + 1) >= y) {
+                if ((this.position.getY() + 1) > y) {
                     this.direction = 4;
                 } else {
                     moveVector = this.position.add(new Vector2d(1, 1));
@@ -151,7 +153,7 @@ public class Animal {
                 this.position = moveVector;
             }
             case 7 -> {
-                if ((this.position.getY() + 1) >= y) {
+                if ((this.position.getY() + 1) > y) {
                     this.direction = 4;
                 } else {
                     moveVector = this.position.add(new Vector2d(-1, 1));
@@ -161,18 +163,31 @@ public class Animal {
             }
         }
     }
-    public Animal createChild(Animal otherParent) {
+
+    public Animal createChild(Animal otherParent, int minMutateNumber, int maxMutateNumber) {
         int sumOfEnergy = this.energy + otherParent.energy;
         float energyPercent = (float) this.energy / sumOfEnergy;
-        this.energy -= childrenEnergy.get();
-        otherParent.energy -= childrenEnergy.get();
+        this.energy -= childrenEnergy;
+        otherParent.energy -= childrenEnergy;
 
         Genotype childGenotype = this.genotype.createChildGenotype(otherParent.genotype, energyPercent);
+
+        Random random = new Random();
+        int genomeSize = childGenotype.getGenomeSize();
+        int mutateNumber = random.nextInt(maxMutateNumber - minMutateNumber + 1) + minMutateNumber;
+        for (int i = 0; i < mutateNumber; i++){
+            int index = random.nextInt(0, genomeSize-1);
+            int value = random.nextInt(8);
+            childGenotype.getGenome().set(index, value);
+        }
 
         this.childrenCount += 1;
         otherParent.childrenCount += 1;
 
-        return new Animal(this.position, childrenEnergy.get()*2, childGenotype);
+        Animal child = new Animal(this.position, childrenEnergy*2, childGenotype, childrenEnergy);
+        this.children.add(child);
+        otherParent.children.add(child);
+        return child;
     }
 
 }

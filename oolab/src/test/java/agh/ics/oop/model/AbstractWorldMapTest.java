@@ -30,35 +30,21 @@ public class AbstractWorldMapTest {
 
         assertEquals(10, map.width);
         assertEquals(10, map.height);
-        assertTrue(map.getMapSquares().isEmpty());
         assertTrue(map.getAnimals().isEmpty());
         assertEquals(0.4 * map.height, map.jungleLowerY, 0.1);
         assertEquals(0.6 * map.height - 1, map.jungleUpperY, 0.1);
     }
 
-    @Test
-    public void testPlaceSquareOnMap() {
-        AbstractWorldMap map = new TestWorldMap(10, 10);
-        Vector2d position = new Vector2d(5, 5);
-        Square square = new Square();
-
-        boolean result = map.place(square, position);
-
-        assertTrue(result);
-        assertTrue(map.isOccupied(position));
-        assertEquals(square, map.objectAt(position));
-    }
 
     @Test
     public void testPlaceAnimalOnMap() {
         AbstractWorldMap map = new GlobeMap(10, 10);
         Vector2d position = new Vector2d(3, 3);
-        Animal animal = new Animal(position, 100, 5);
-        Square square = new Square();
-        square.addAnimal(animal);
-        map.createAnimals(10, 10, 10);
-        boolean result = map.place(square, position);
-        assertTrue(result);
+        Animal animal = new Animal(position, 100, 5, 5);
+
+        map.addAnimal(animal);
+        map.createAnimals(10, 10, 10, 5);
+
         assertEquals(11, map.getAnimals().size());
         assertTrue(map.getAnimals().contains(animal));
     }
@@ -68,14 +54,10 @@ public class AbstractWorldMapTest {
         AbstractWorldMap map = new TestWorldMap(10, 10);
         Vector2d position = new Vector2d(2, 2);
         Plant plant = new Plant(position);
-        Square square = new Square();
-        square.addPlant(plant);
 
-        boolean result = map.place(square, position);
+        map.addPlant(plant);
 
-        assertTrue(result);
-        assertTrue(map.isOccupied(position));
-        assertEquals(plant, map.objectAt(position).getPlant());
+        assertEquals(plant, map.squareAt(position).getPlant());
     }
 
     @Test
@@ -83,13 +65,9 @@ public class AbstractWorldMapTest {
         AbstractWorldMap map = new TestWorldMap(10, 10);
 
         map.growPlants(5);
-
-        int plantCount = 0;
-        for (Square square : map.getMapSquares().values()) {
-            if (square.hasPlant()) {
-                plantCount++;
-            }
-        }
+        int plantCount = (int) map.mapSquares.values().stream()
+                .filter(Square::hasPlant)
+                .count();
 
         assertEquals(5, plantCount);
     }
@@ -97,49 +75,33 @@ public class AbstractWorldMapTest {
     @Test
     public void testRemoveDeadAnimals() {
         AbstractWorldMap map = new TestWorldMap(10, 10);
-        Animal aliveAnimal = new Animal(new Vector2d(2, 2), 50, 5);
-        Animal deadAnimal = new Animal(new Vector2d(3, 3), 0, 5);
+        Animal aliveAnimal = new Animal(new Vector2d(2, 2), 50, 5, 5);
+        Animal deadAnimal = new Animal(new Vector2d(3, 3), 0, 5, 5);
 
-        Square aliveSquare = new Square();
-        aliveSquare.addAnimal(aliveAnimal);
-
-        Square deadSquare = new Square();
-        deadSquare.addAnimal(deadAnimal);
-
-        map.place(aliveSquare, new Vector2d(2, 2));
-        map.place(deadSquare, new Vector2d(3, 3));
+        map.addAnimal(aliveAnimal);
+        map.addAnimal(deadAnimal);
 
         map.removeDeadAnimals();
 
         assertEquals(1, map.getAnimals().size());
         assertTrue(map.getAnimals().contains(aliveAnimal));
         assertFalse(map.getAnimals().contains(deadAnimal));
-        assertNull(map.objectAt(new Vector2d(3, 3)));
     }
 
     @Test
     public void testAnimalMovement() {
         AbstractWorldMap map = new TestWorldMap(10, 10);
-        Animal animal = new Animal(new Vector2d(2, 2), 50, 5);
-        Square square = new Square();
-        square.addAnimal(animal);
-
-        map.place(square, new Vector2d(2, 2));
-
-        animal.move(map);
-        Vector2d newPosition = animal.getPosition();
+        Animal animal = new Animal(new Vector2d(2, 2), 50, 5, 5);
+        map.addAnimal(animal);
 
         map.moveAnimal(animal);
 
-        //assertNull(map.objectAt(new Vector2d(2, 2)));
-        //assertNotNull(map.objectAt(newPosition));
         assertTrue(map.getAnimals().contains(animal));
     }
 
     @Test
     public void testMapBounds() {
         AbstractWorldMap map = new TestWorldMap(10, 10);
-
         Vector2d insidePosition = new Vector2d(5, 5);
         Vector2d outsidePosition = new Vector2d(15, 15);
 
@@ -159,14 +121,11 @@ public class AbstractWorldMapTest {
     @Test
     public void testCopulationAllAnimals() {
         AbstractWorldMap map = new TestWorldMap(10, 10);
+        Animal parent1 = new Animal(new Vector2d(5, 5), 100, 10, 5);
+        Animal parent2 = new Animal(new Vector2d(5, 5), 100, 10, 5);
+        map.addAnimal(parent1);
+        map.addAnimal(parent2);
 
-        Animal parent1 = new Animal(new Vector2d(5, 5), 100, 10);
-        Animal parent2 = new Animal(new Vector2d(5, 5), 100, 10);
-        Square square = new Square();
-        square.addAnimal(parent1);
-        square.addAnimal(parent2);
-
-        map.place(square, new Vector2d(5, 5));
         map.copulationAllAnimals(50);
 
         assertTrue(map.getAnimals().size() > 2);
@@ -200,30 +159,15 @@ public class AbstractWorldMapTest {
     @Test
     public void testEatPlants() {
         AbstractWorldMap map = new TestWorldMap(10, 10);
-        Animal animal = new Animal(new Vector2d(2, 2), 50, 5);
+        Animal animal = new Animal(new Vector2d(2, 2), 50, 5, 5);
         Plant plant = new Plant(new Vector2d(2,2));
-
-        Square square = new Square();
-        square.addAnimal(animal);
-        square.addPlant(plant);
-
-        assertTrue(square.hasPlant());
-
-        map.place(square, new Vector2d(2, 2));
+        map.addPlant(plant);
+        map.addAnimal(animal);
         map.eatPlants(3);
+
         assertEquals(53, animal.getEnergy());
-        assertFalse(square.hasPlant());
+        assertFalse(map.mapSquares.get(new Vector2d(2, 2)).hasPlant());
     }
 
-    @Test
-    public void testGrowAllPlants() {
-        AbstractWorldMap map = new GlobeMap(10, 10);
-        map.growPlants(100);
-    }
-
-    @Test
-    public void testSquares() {
-
-    }
 }
 

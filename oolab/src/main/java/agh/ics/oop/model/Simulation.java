@@ -12,23 +12,15 @@ public class Simulation implements Runnable {
     private SimulationWorldPresenter presenter;
     public Simulation(WorldConfiguration config, SimulationWorldPresenter presenter) {
         this.presenter = presenter;
-        try {
-            System.out.println(config.toString());
-            this.config = config;
-            if(config.mapVariant() == MapVariant.NORMAL){
-                this.worldMap = new GlobeMap(config.mapWidth(), config.mapHeight());
-            }
-            else{
-                this.worldMap = new FireMap(config.mapWidth(), config.mapHeight(), config.burnTime(), config.fireFrequency());
-            }
-            this.worldMap.createMap(config.animalStart(), config.plantStart(), config.animalStartEnergy(), config.animalGenotypeLength());
-            Animal.setChildrenEnergy(config.animalEnergyUsedToReproduce());
-            Genotype.setMinMutateNumber(config.animalMutationMinimum());
-            Genotype.setMaxMutateNumber(config.animalMutationMaximum());
-            Genotype.setGenomeVariant(config.genomeVariant());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        this.config = config;
+        if(config.mapVariant() == MapVariant.NORMAL){
+            this.worldMap = new GlobeMap(config.mapWidth(), config.mapHeight(), config.genomeVariant());
         }
+        else{
+            this.worldMap = new FireMap(config.mapWidth(), config.mapHeight(), config.genomeVariant(), config.burnTime(), config.fireFrequency());
+        }
+        this.worldMap.createMap(config.animalStart(), config.plantStart(),
+                config.animalStartEnergy(), config.animalGenotypeLength(), config.animalEnergyUsedToReproduce());
         worldMap.addObserver(presenter);
     }
 
@@ -43,7 +35,7 @@ public class Simulation implements Runnable {
             worldMap.removeDeadAnimals();
             worldMap.moveAllAnimals();
             worldMap.eatPlants(config.plantEnergy());
-            worldMap.copulationAllAnimals(config.energyAllowingReproduction());
+            worldMap.copulationAllAnimals(config.energyAllowingReproduction(), config.animalMutationMinimum(), config.animalMutationMaximum());
             worldMap.growPlants(config.plantDaily());
             if (worldMap instanceof FireMap){
                 ((FireMap) worldMap).spreadFire();
