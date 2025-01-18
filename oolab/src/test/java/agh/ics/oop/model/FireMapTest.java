@@ -1,5 +1,6 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Fire;
 import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.elements.Square;
@@ -72,6 +73,27 @@ class FireMapTest {
         assertTrue(square3.onFire());
         assertTrue(square4.onFire());
         assertTrue(square5.onFire());
+    }
+
+    @Test
+    public void testFireKillsAnimals() {
+        FireMap map = new FireMap(10,10,10,10);
+        Plant plant1 = new Plant(new Vector2d(5,5));
+        Animal animal1 = new Animal(new Vector2d(5,5), 50, 5);
+        Square square1 = new Square();
+        square1.addPlant(plant1);
+        square1.addAnimal(animal1);
+        map.place(square1, new Vector2d(5,5));
+
+        assertTrue(square1.getAnimals().contains(animal1));
+
+        map.startFire();
+
+        assertTrue(square1.getAnimals().contains(animal1));
+
+        map.spreadFire();
+
+        assertFalse(square1.getAnimals().contains(animal1));
     }
 
 }

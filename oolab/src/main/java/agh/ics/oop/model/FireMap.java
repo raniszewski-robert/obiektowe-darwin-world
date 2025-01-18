@@ -3,19 +3,19 @@ package agh.ics.oop.model;
 import agh.ics.oop.model.elements.*;
 import agh.ics.oop.model.enums.GenomeVariant;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class FireMap extends AbstractWorldMap{
     private final List<Fire> fires;
+    private final Set<Vector2d> firePositions;
     public int burnTime;
     public int fireFrequency;
+
 
     protected FireMap(int width, int height, int burnTime, int fireFrequency) {
         super(width, height);
         this.fires = new ArrayList<>();
+        this.firePositions = new HashSet<>();
         this.burnTime = burnTime;
         this.fireFrequency = fireFrequency;
     }
@@ -27,9 +27,12 @@ public class FireMap extends AbstractWorldMap{
             Plant randomPlant = plants.get(randomIndex);
             Vector2d position = randomPlant.getPosition();
             Square square = mapSquares.get(position);
-            Fire fire = new Fire(position, burnTime);
-            square.addFire(fire);
-            fires.add(fire);
+            if (!firePositions.contains(position)) {
+                Fire fire = new Fire(position, burnTime);
+                square.addFire(fire);
+                fires.add(fire);
+                firePositions.add(position);
+            }
         }
     }
 
@@ -42,13 +45,24 @@ public class FireMap extends AbstractWorldMap{
 
             for (Vector2d neighbor : neighbors) {
                 Square square = mapSquares.get(neighbor);
-                if (square != null && square.hasPlant() && !square.onFire()) {
+                if (square != null && square.hasPlant() && !square.onFire() && !firePositions.contains(neighbor)) {
                     newFires.add(new Fire(neighbor, burnTime));
                     square.addFire(new Fire(neighbor, burnTime));
+                    firePositions.add(neighbor);
                 }
             }
 
             Square currSquare = mapSquares.get(position);
+
+            if (currSquare != null && currSquare.getAnimals() != null) {
+                for (Animal animal : currSquare.getAnimals()) {
+                    this.animals.remove(animal);
+                    this.getDeadAnimals().add(animal);
+                    currSquare.removeAnimal(animal);
+
+                }
+            }
+
             fire.tick();
             if (fire.isDead()) {
                 deadFires.add(fire);
@@ -57,6 +71,7 @@ public class FireMap extends AbstractWorldMap{
                 currSquare.removePlant();
                 currSquare.removeFire();
                 mapSquares.remove(position);
+                firePositions.remove(fire.getPosition());
             }
         }
         fires.removeAll(deadFires);
