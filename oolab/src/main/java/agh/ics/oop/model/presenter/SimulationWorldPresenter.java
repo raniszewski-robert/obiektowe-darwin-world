@@ -11,9 +11,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -21,6 +19,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -100,7 +100,24 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
 
     private FileWriter writer = null;
 
-    public void startSimulation(WorldConfiguration config) throws InterruptedException {
+    public void startSimulation(WorldConfiguration config, Stage additionalStage) throws InterruptedException {
+        additionalStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Potwierdzenie");
+                alert.setHeaderText("Czy na pewno chcesz zamknąć aplikację?");
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        System.out.println("Okno zostalo zamkniete");
+                    } else {
+                        event.consume(); // Anuluje zamknięcie okna
+                    }
+                });
+                simulation.setClosedWindow(true);
+            }
+        });
+
         if (config.saveToCSV()) {
             try {
                 // Inicjalizacja loggera CSV
@@ -194,11 +211,8 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
             int x = entry.getKey().getX();
             int y = entry.getKey().getY();
             ImageView imageView = null;
-            try {
-                imageView = gridLabels.get(y).get(x);
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
+            imageView = gridLabels.get(y).get(x);
+
             Square square = entry.getValue();
 
             if(square.hasPlant()){
@@ -390,8 +404,6 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
         Genotype dominantGenotype = stats.getMostCommonGenotype();
         String avgAge = (String.format("%.2f", stats.getAverageLifeLength()));
         double avgOffspring = stats.getAverageChildrenCount();
-        System.out.println(saveToCSV);
-        System.out.println(csvLogger);
 
         if (saveToCSV && csvLogger != null) {
             csvLogger.logStatistics(currDay, animalsCount, plantCount, avgEnergy, freeSpaces,

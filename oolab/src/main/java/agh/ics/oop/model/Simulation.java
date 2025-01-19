@@ -1,7 +1,5 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.elements.Animal;
-import agh.ics.oop.model.elements.Genotype;
 import agh.ics.oop.model.enums.MapVariant;
 import agh.ics.oop.model.presenter.SimulationWorldPresenter;
 import agh.ics.oop.model.records.WorldConfiguration;
@@ -11,6 +9,7 @@ public class Simulation implements Runnable {
     private AbstractWorldMap worldMap;
     private SimulationWorldPresenter presenter;
     private boolean running = true;
+    private boolean closedWindow = false;
     private int dayCounter = 0;
     private final Object lock = new Object();
     public Simulation(WorldConfiguration config, SimulationWorldPresenter presenter) {
@@ -39,9 +38,13 @@ public class Simulation implements Runnable {
         return dayCounter;
     }
 
+    public void setClosedWindow(boolean closedWindow) {
+        this.closedWindow = closedWindow;
+    }
+
     @Override
     public void run() {
-        while (true) {
+        while (!closedWindow) {
             synchronized (lock) {
                 while (!running) {
                     try {
