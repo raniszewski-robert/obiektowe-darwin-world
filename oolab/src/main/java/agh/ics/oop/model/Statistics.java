@@ -33,12 +33,16 @@ public class Statistics {
 
     public Genotype getMostCommonGenotype(){
         List<Animal> animals = map.animals;
-        return animals.stream()
+         Genotype genotype = animals.stream()
                 .collect(Collectors.groupingBy(Animal::getGenotype, Collectors.counting()))
                 .entrySet().stream()
                 .max(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey)
                 .orElse(null);
+         if(genotype != null) {
+             return genotype;
+         }
+         return null;
     }
 
     public double getAverageEnergy(){

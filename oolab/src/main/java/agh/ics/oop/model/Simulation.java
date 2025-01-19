@@ -27,13 +27,20 @@ public class Simulation implements Runnable {
         worldMap.addObserver(presenter);
     }
 
+    public Object getLock() {
+        return lock;
+    }
+
     public AbstractWorldMap getWorldMap() {
         return worldMap;
     }
 
+    public int getDayCounter() {
+        return dayCounter;
+    }
+
     @Override
     public void run() {
-        int turnCounter = 0;
         while (true) {
             synchronized (lock) {
                 while (!running) {
@@ -46,9 +53,12 @@ public class Simulation implements Runnable {
             }
             worldMap.removeDeadAnimals();
             worldMap.moveAllAnimals();
-            if (worldMap instanceof FireMap){
+            worldMap.eatPlants(config.plantEnergy());
+            worldMap.copulationAllAnimals(config.energyAllowingReproduction(), config.animalMutationMinimum(), config.animalMutationMaximum());
+            worldMap.growPlants(config.plantDaily());
+            if (worldMap instanceof FireMap) {
                 ((FireMap) worldMap).spreadFire();
-                if (turnCounter % config.fireFrequency() == 0) { // Execute every `fireFrequency` turns
+                if (dayCounter % config.fireFrequency() == 0) { // Execute every `fireFrequency` turns
                     ((FireMap) worldMap).startFire();
                 }
             }
@@ -62,7 +72,6 @@ public class Simulation implements Runnable {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            turnCounter++;
             dayCounter++;
         }
     }

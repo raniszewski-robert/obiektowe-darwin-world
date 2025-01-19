@@ -25,6 +25,12 @@
     -fx-padding: 4;
     -fx-alignment: center;
 }
+.vboxButton {
+    -fx-border-width: 1;
+    -fx-font-size: 12;
+    -fx-padding: 4;
+    -fx-alignment: center;
+}
 
 .topHBoxStyles {
     -fx-content-display: center;
@@ -39,7 +45,7 @@
 }
 
 .button {
-    -fx-background-color: #505050; /* Kolor tła */
+    -fx-background-color: #505050;
     -fx-background-radius: 10;
     -fx-text-fill: white;
     -fx-font-size: 14px;
