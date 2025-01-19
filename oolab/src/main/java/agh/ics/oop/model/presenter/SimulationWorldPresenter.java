@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Button;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -35,7 +36,6 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
     public Label currentDay;
     public Label followedDateOfDeath;
     public Label followedChildrenNumber;
-    public Label followedOffspringNumber;
     public Button popularGenomeButton;
     public Slider zoomSlider;
     public BorderPane rootPane;
@@ -92,7 +92,7 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
     private Image animal5 = new Image("animal_5.png");
     private Image animal6 = new Image("animal_6.png");
     private Image animal7 = new Image("animal_7.png");
-    private Image fire = new Image("fire.png");
+    private Image fire = new Image("firegrass.png");
     private List<Image> animalImages = new ArrayList<>();
     private int energyForBeingFull;
     private Statistics stats;
@@ -158,11 +158,21 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
         }
     }
 
+    public void setAnimalColorBasedOnEnergy(ImageView imageView, double energy) {
+        ColorAdjust colorAdjust = new ColorAdjust();
+        double normalizedEnergy = Math.max(-1, Math.min(1, (energy - 50) / 50.0));
+        double hue = normalizedEnergy * 0.27;
+        colorAdjust.setSaturation(1);
+        colorAdjust.setHue(hue);
+        imageView.setEffect(colorAdjust);
+    }
+
     public void drawMap() {
         for (int y = 0; y<height; y++) {
             for (int x = 0; x < width; x++) {
                 ImageView imageView = gridLabels.get(y).get(x);
                 imageView.setImage(dirt);
+                imageView.setEffect(null);
             }
         }
 
@@ -199,6 +209,7 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
                     case 7 -> imageView.setImage(animal5);
                     default -> System.out.println("Unknown direction: " + direction);
                 }
+                setAnimalColorBasedOnEnergy(imageView, currAnimal.getEnergy());
             }
 
             //if(!square.getAnimalsAsQueue().isEmpty()){
