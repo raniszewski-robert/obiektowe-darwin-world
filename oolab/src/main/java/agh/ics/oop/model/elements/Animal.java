@@ -4,9 +4,7 @@ import agh.ics.oop.model.AbstractWorldMap;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.interfaces.WorldMap;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Animal {
     private int direction;
@@ -175,11 +173,12 @@ public class Animal {
 
         Genotype childGenotype = this.genotype.createChildGenotype(otherParent.genotype, energyPercent);
 
+
         Random random = new Random();
         int genomeSize = childGenotype.getGenomeSize();
         int mutateNumber = random.nextInt(maxMutateNumber - minMutateNumber + 1) + minMutateNumber;
         for (int i = 0; i < mutateNumber; i++){
-            int index = random.nextInt(0, genomeSize-1);
+            int index = random.nextInt(0, genomeSize);
             int value = random.nextInt(8);
             childGenotype.getGenome().set(index, value);
         }
@@ -193,4 +192,21 @@ public class Animal {
         return child;
     }
 
+    public Set<Animal> getDescendants() {
+        Set<Animal> descendantSet = new HashSet<>();
+
+        for (Animal child : children) {
+            descendantSet.add(child);
+            descendantSet.addAll(child.getDescendants());
+        }
+        return descendantSet;
+    }
+    public int getDescendantNumber(){
+        Set<Animal> descendants = getDescendants();
+        if(!descendants.isEmpty()){
+            return descendants.size();
+        }
+        return 0;
+
+    }
 }

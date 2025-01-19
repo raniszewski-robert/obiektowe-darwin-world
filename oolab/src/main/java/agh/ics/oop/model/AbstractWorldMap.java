@@ -73,7 +73,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         return (position.follows(lowerLeft) && position.precedes(upperRight));
     }
 
-    private boolean isInJungle(Vector2d position) {
+    public boolean isInJungle(Vector2d position) {
         return position.getY() >= jungleLowerY && position.getY() <= jungleUpperY;
     }
 
@@ -203,8 +203,8 @@ public abstract class AbstractWorldMap implements WorldMap {
                 while(currAnimals.size() > 1){
                     Animal firstParent = currAnimals.poll();
                     Animal otherParent = currAnimals.poll();
-                    Animal child = firstParent.createChild(otherParent, minMutation, maxMutation);
-
+                    Animal child = null;
+                    child = firstParent.createChild(otherParent, minMutation, maxMutation);
                     addAnimal(child);
                 }
             }

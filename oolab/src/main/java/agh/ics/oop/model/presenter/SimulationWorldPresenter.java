@@ -28,18 +28,19 @@ import java.util.*;
 public class SimulationWorldPresenter extends SimulationPresenter implements MapChangeListener {
 
     public Button pauseResumeButton;
-    public Label followedGenome;
-    public Label followedEnergy;
-    public Label followedEatenGrass;
-    public Label followedHeader;
-    public Label followedAge;
+    public Label clickedGenome;
+    public Label clickedEnergy;
+    public Label clickedHeader;
+    public Label clickedAge;
     public Label currentDay;
-    public Label followedDateOfDeath;
-    public Label followedChildrenNumber;
+    public Label clickedChildrenNumber;
     public Button popularGenomeButton;
     public Slider zoomSlider;
     public BorderPane rootPane;
     public Button highlightGrassButton;
+    public Label clickedDescendantsNumber;
+    public Label clickedEatenGrass;
+    public Label clickedDayOfDeath;
     private AbstractWorldMap worldMap;
     private Simulation simulation;
     @FXML
@@ -71,19 +72,14 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
     @FXML
     private HBox deathHBox;
 
-
+    AbstractWorldMap temporaryWorldMap;
     private boolean paused = false;
     private boolean saveEveryDayToCSV = false;
-    private boolean highlight = false;
-    private boolean highlightEQ=true;
-    private boolean mapVersion;
-
-    private Animal followedAnimal = null;
-
+    private boolean highlightField = false;
+    private boolean highlightGenome = false;
 
     private Image dirt = new Image("dirt.png");
     private Image grass = new Image("grass.png");
-    private Image animal = new Image("animal.png");
     private Image animal0 = new Image("animal_0.png");
     private Image animal1 = new Image("animal_1.png");
     private Image animal2 = new Image("animal_2.png");
@@ -96,8 +92,7 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
     private List<Image> animalImages = new ArrayList<>();
     private int energyForBeingFull;
     private Statistics stats;
-
-    //przesunięcie GridPane
+    public Animal selectedAnimal = null;
     private double translateX = 0;
     private double translateY = 0;
 
@@ -111,6 +106,7 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
         simulation = new Simulation(config, this);
         this.worldMap = simulation.getWorldMap();
         stats = new Statistics(worldMap);
+
         drawEmptyMap();
         SimulationEngine simulationEngine = new SimulationEngine();
         simulationEngine.runAsyncInThreadPool(List.of(simulation));
@@ -119,7 +115,8 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
     }
 
     public void drawEmptyMap(){
-        zoomSlider.setValue(39);
+
+        zoomSlider.setValue(40);
         zoomSlider.setMax(300);
         rootPane.addEventFilter(KeyEvent.ANY, event -> {
             if (event.getEventType() == KeyEvent.KEY_RELEASED && event.getCode() == KeyCode.SPACE) {
@@ -139,6 +136,7 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
                 imageView.setFitHeight(20);
                 int finalRow = row;
                 int finalCol = col;
+
                 imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
@@ -164,6 +162,15 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
         double hue = normalizedEnergy * 0.27;
         colorAdjust.setSaturation(1);
         colorAdjust.setHue(hue);
+        imageView.setEffect(colorAdjust);
+    }
+    public void setSelectedAnimalColor(){
+        int y = selectedAnimal.getPosition().getY();
+        int x = selectedAnimal.getPosition().getX();
+        ImageView imageView = gridLabels.get(y).get(x);
+        ColorAdjust colorAdjust = new ColorAdjust();
+        colorAdjust.setSaturation(-1);
+        colorAdjust.setBrightness(0.5);
         imageView.setEffect(colorAdjust);
     }
 
@@ -197,29 +204,110 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
             Queue<Animal> AnimalsQueue = square.getAnimalsAsQueue();
             if (!AnimalsQueue.isEmpty()) {
                 Animal currAnimal = AnimalsQueue.poll();
-                int direction = currAnimal.getDirection();
-                switch (direction) {
-                    case 0 -> imageView.setImage(animal4);
-                    case 1 -> imageView.setImage(animal3);
-                    case 2 -> imageView.setImage(animal2);
-                    case 3 -> imageView.setImage(animal1);
-                    case 4 -> imageView.setImage(animal0);
-                    case 5 -> imageView.setImage(animal7);
-                    case 6 -> imageView.setImage(animal6);
-                    case 7 -> imageView.setImage(animal5);
-                    default -> System.out.println("Unknown direction: " + direction);
-                }
+                setAnimalPicture(imageView, currAnimal);
                 setAnimalColorBasedOnEnergy(imageView, currAnimal.getEnergy());
             }
+        }
+        if (selectedAnimal != null){
+            setAnimalStatistics(selectedAnimal);
+            setSelectedAnimalColor();
+        }
+        highlightField = false;
+        highlightGenome = false;
+    }
 
-            //if(!square.getAnimalsAsQueue().isEmpty()){
-            //    imageView.setImage(animal);
-            //}
+    private void setAnimalPicture(ImageView imageView, Animal animal) {
+        int direction = animal.getDirection();
+        switch (direction) {
+            case 0 -> imageView.setImage(animal4);
+            case 1 -> imageView.setImage(animal3);
+            case 2 -> imageView.setImage(animal2);
+            case 3 -> imageView.setImage(animal1);
+            case 4 -> imageView.setImage(animal0);
+            case 5 -> imageView.setImage(animal7);
+            case 6 -> imageView.setImage(animal6);
+            case 7 -> imageView.setImage(animal5);
+            default -> System.out.println("Unknown direction: " + direction);
         }
     }
-    private void handleMouseClick(int finalRow, int finalCol) {
+    private void handleMouseClick(int y, int x) {
+        if(!paused){return;}
+        Vector2d position = new Vector2d(x, y);
+        PriorityQueue<Animal> animals = new PriorityQueue<>(Comparator.comparingInt(Animal::getEnergy).reversed()
+                .thenComparingInt(Animal::getAge).reversed()
+                .thenComparingInt(Animal::getChildrenCount).reversed());
+        for (Animal animal : this.worldMap.getAnimals()) {
+            if(animal.getPosition().equals(position)){
+                animals.add(animal);
+            }
+        }
+        if (!animals.isEmpty()) {
+            if(selectedAnimal != null){
+                int _y = selectedAnimal.getPosition().getY();
+                int _x = selectedAnimal.getPosition().getX();
+                ImageView imageView = gridLabels.get(_y).get(_x);
+                setAnimalColorBasedOnEnergy(imageView, selectedAnimal.getEnergy());
+            }
+            selectedAnimal = animals.poll();
+            setSelectedAnimalColor();
+            setAnimalStatistics(selectedAnimal);
+        }
+        else{
+            clearAnimalStatistics();
+        }
+    }
+
+    public void clearAnimalStatistics() {
+        clickedHeader.setText("");
+        clickedGenome.setText("");
+        clickedEnergy.setText("");
+        clickedEatenGrass.setText("");
+        clickedChildrenNumber.setText("");
+        clickedDescendantsNumber.setText("");
+        clickedAge.setText("");
+    }
+    public void setAnimalStatistics(Animal animal) {
+        if(animal == null) return;
+        clickedHeader.setText("Animal at: " + animal.getPosition());
+        Genotype genotype = animal.getGenotype();
+        clickedGenome.setText("Genome:" + highlightElement(genotype.getGenome(), genotype.getCurrentGenomeIndex() ) );
+        clickedEnergy.setText("Energy: " + animal.getEnergy());
+        clickedEatenGrass.setText("Eaten plant: " + animal.getPlantCount());
+        clickedChildrenNumber.setText("Children number: " + animal.getChildrenCount());
+        clickedDescendantsNumber.setText("Descendant number: "+ animal.getDescendantNumber());
+        clickedAge.setText("Age: " + animal.getAge());
+        if(animal.isDead()){
+            clickedDayOfDeath.setText("Day of death: " + simulation.getDayCounter());
+            selectedAnimal = null;
+        }
     }
     public void highlightPopularGenome(ActionEvent actionEvent) {
+        Genotype popularGenome = stats.getMostCommonGenotype();
+        PriorityQueue<Animal> animals = new PriorityQueue<>(Comparator.comparingInt(Animal::getEnergy).reversed()
+                .thenComparingInt(Animal::getAge).reversed()
+                .thenComparingInt(Animal::getChildrenCount).reversed());
+        for (Animal animal : this.worldMap.getAnimals()) {
+            if(animal.getGenotype().equals(popularGenome)){
+                animals.add(animal);
+            }
+        }
+        if (!animals.isEmpty()) {
+            for(Animal animal : animals) {
+                int _y = animal.getPosition().getY();
+                int _x = animal.getPosition().getX();
+                ImageView imageView = gridLabels.get(_y).get(_x);
+                if(!highlightGenome){
+                highlightView(imageView);
+                }
+                else{
+                    ColorAdjust colorAdjust = new ColorAdjust();
+                    colorAdjust.setSaturation(0);
+                    colorAdjust.setBrightness(0);
+                    imageView.setEffect(colorAdjust);
+                }
+            }
+        }
+        highlightGenome = !highlightGenome;
     }
 
     public void pauseResume() {
@@ -234,9 +322,33 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
         }
     }
 
-    public void highlightDominantGrass(ActionEvent actionEvent) {
+    public void highlightDominantGrassButton(ActionEvent actionEvent) {
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                Vector2d position = new Vector2d(col, row);
+                if(worldMap.isInJungle(position)){
+                    ImageView imageView = gridLabels.get(row).get(col);
+                    ColorAdjust colorAdjust = new ColorAdjust();
+                    if(!highlightField){
+                        highlightView(imageView);
+                    }
+                    else{
+                        colorAdjust.setSaturation(0);
+                        colorAdjust.setBrightness(0);
+                        imageView.setEffect(colorAdjust);
+                    }
+                }
+            }
+        }
+        highlightField = !highlightField;
     }
 
+    public void highlightView(ImageView imageView){
+        ColorAdjust colorAdjust = new ColorAdjust();
+        colorAdjust.setSaturation(-1);
+        colorAdjust.setBrightness(0.5);
+        imageView.setEffect(colorAdjust);
+    }
     public void changeZoom() {
         mapGrid.setScaleX((zoomSlider.getValue()+1)/40);
         mapGrid.setScaleY((zoomSlider.getValue()+1)/40);
@@ -256,6 +368,7 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
     @Override
     public void mapChanged(WorldMap worldMap, List<String> messages, List<Vector2d> list) {
         Platform.runLater(this::drawMap);
+        temporaryWorldMap = ((AbstractWorldMap) worldMap);
     }
 
     public void updateStatistics() {
@@ -276,6 +389,19 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
             }
             avgAgeLabel.setText(avgAge);
             avgOffspringLabel.setText(Double.toString(avgOffspring));
+            currentDay.setText("Day number: " + simulation.getDayCounter());
         });
+    }
+
+    public static List<Object> highlightElement(List<Integer> numbers, int indexToHighlight) {
+        List<Object> result = new ArrayList<>();
+        for (int i = 0; i < numbers.size(); i++) {
+            if (i == indexToHighlight) {
+                result.add(List.of(numbers.get(i)));
+            } else {
+                result.add(numbers.get(i));
+            }
+        }
+        return result;
     }
 }
