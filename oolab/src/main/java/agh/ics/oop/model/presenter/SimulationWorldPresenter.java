@@ -21,10 +21,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Timer;
+import java.util.*;
 
 public class SimulationWorldPresenter extends SimulationPresenter implements MapChangeListener {
 
@@ -86,6 +83,14 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
     private Image dirt = new Image("dirt.png");
     private Image grass = new Image("grass.png");
     private Image animal = new Image("animal.png");
+    private Image animal1 = new Image("animal1.png");
+    private Image animal2 = new Image("animal2.png");
+    private Image animal3 = new Image("animal3.png");
+    private Image animal4 = new Image("animal4.png");
+    private Image animal5 = new Image("animal5.png");
+    private Image animal6 = new Image("animal6.png");
+    private Image animal7 = new Image("animal7.png");
+    private Image animal8 = new Image("animal8.png");
     private Image fire = new Image("fire.png");
     private List<Image> animalImages = new ArrayList<>();
     private int energyForBeingFull;
@@ -166,10 +171,29 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
                     imageView.setImage(fire);
                 }
             }
-            if(!square.getAnimals().isEmpty()){
-                    imageView.setImage(animal);
+
+            Queue<Animal> AnimalsQueue = square.getAnimalsAsQueue();
+            if (!AnimalsQueue.isEmpty()) {
+                Animal currAnimal = AnimalsQueue.poll();
+                int direction = currAnimal.getDirection();
+                System.out.println(direction);
+
+                switch (direction) {
+                    case 0 -> imageView.setImage(animal1);
+                    case 1 -> imageView.setImage(animal2);
+                    case 2 -> imageView.setImage(animal3);
+                    case 3 -> imageView.setImage(animal4);
+                    case 4 -> imageView.setImage(animal5);
+                    case 5 -> imageView.setImage(animal6);
+                    case 6 -> imageView.setImage(animal7);
+                    case 7 -> imageView.setImage(animal8);
+                    default -> System.out.println("Unknown direction: " + direction);
+                }
             }
 
+            //if(!square.getAnimalsAsQueue().isEmpty()){
+            //    imageView.setImage(animal);
+            //}
         }
     }
     private void handleMouseClick(int finalRow, int finalCol) {

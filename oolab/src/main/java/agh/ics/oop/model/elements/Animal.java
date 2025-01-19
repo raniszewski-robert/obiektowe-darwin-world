@@ -70,6 +70,8 @@ public class Animal {
         return position;
     }
 
+    public int getDirection() { return direction; }
+
     public int getAge() {
         return age;
     }
