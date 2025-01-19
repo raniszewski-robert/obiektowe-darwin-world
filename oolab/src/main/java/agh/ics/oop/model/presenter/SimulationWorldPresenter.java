@@ -226,7 +226,9 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
             plantCountLabel.setText(Integer.toString(plantCount));
             avgEnergyLabel.setText(Double.toString(avgEnergy));
             freeSpaceLabel.setText(Integer.toString(freeSpaces));
-            dominantGenotypePositionsLabel.setText(dominantGenotype.toString());
+            if (dominantGenotype != null) {
+                dominantGenotypePositionsLabel.setText(dominantGenotype.toString());
+            }
             avgAgeLabel.setText(avgAge);
             avgOffspringLabel.setText(Double.toString(avgOffspring));
         });
