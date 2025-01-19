@@ -72,4 +72,8 @@ public class Genotype {
 
         return childGenotype;
     }
+
+    public String toString() {
+        return genome.toString();
+    }
 }

@@ -2,6 +2,7 @@ package agh.ics.oop.model.presenter;
 
 import agh.ics.oop.model.*;
 import agh.ics.oop.model.elements.Animal;
+import agh.ics.oop.model.elements.Genotype;
 import agh.ics.oop.model.elements.Square;
 import agh.ics.oop.model.interfaces.MapChangeListener;
 import agh.ics.oop.model.interfaces.WorldMap;
@@ -54,7 +55,7 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
     @FXML
     private Label animalsCountLabel;
     @FXML
-    private Label grassCountLabel;
+    private Label plantCountLabel;
     @FXML
     private Label avgEnergyLabel;
     @FXML
@@ -88,7 +89,7 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
     private Image fire = new Image("fire.png");
     private List<Image> animalImages = new ArrayList<>();
     private int energyForBeingFull;
-    Statistics stats;
+    private Statistics stats;
 
     //przesunięcie GridPane
     private double translateX = 0;
@@ -210,5 +211,24 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
     @Override
     public void mapChanged(WorldMap worldMap, List<String> messages, List<Vector2d> list) {
         Platform.runLater(this::drawMap);
+    }
+
+    public void updateStatistics() {
+        int animalsCount = stats.countAnimals();
+        int plantCount = stats.countPlants();
+        double avgEnergy = stats.getAverageEnergy();
+        int freeSpaces = stats.countFreeSquares();
+        Genotype dominantGenotype = stats.getMostCommonGenotype();
+        String avgAge = (String.format("%.2f", stats.getAverageLifeLength()));
+        double avgOffspring = stats.getAverageChildrenCount();
+        Platform.runLater(() -> {
+            animalsCountLabel.setText(Integer.toString(animalsCount));
+            plantCountLabel.setText(Integer.toString(plantCount));
+            avgEnergyLabel.setText(Double.toString(avgEnergy));
+            freeSpaceLabel.setText(Integer.toString(freeSpaces));
+            dominantGenotypePositionsLabel.setText(dominantGenotype.toString());
+            avgAgeLabel.setText(avgAge);
+            avgOffspringLabel.setText(Double.toString(avgOffspring));
+        });
     }
 }

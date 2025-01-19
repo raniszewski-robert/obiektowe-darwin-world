@@ -37,7 +37,6 @@ public class Simulation implements Runnable {
         while (true) {
             synchronized (lock) {
                 while (!running) {
-                    System.out.println("st");
                     try {
                         lock.wait();
                     } catch (InterruptedException e) {
@@ -57,6 +56,7 @@ public class Simulation implements Runnable {
                 }
             }
             worldMap.mapChanged();
+            presenter.updateStatistics();
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {

@@ -88,8 +88,8 @@
                     <Label fx:id="animalsCountLabel" />
                 </VBox>
                 <VBox styleClass="vboxStat" GridPane.columnIndex="1" GridPane.halignment="CENTER">
-                    <Label text="Number of Grass:" />
-                    <Label fx:id="grassCountLabel" />
+                    <Label text="Number of Plants:" />
+                    <Label fx:id="plantCountLabel" />
                 </VBox>
                 <VBox styleClass="vboxStat" GridPane.columnIndex="2" GridPane.halignment="CENTER">
                     <Label text="Average Energy:" />
