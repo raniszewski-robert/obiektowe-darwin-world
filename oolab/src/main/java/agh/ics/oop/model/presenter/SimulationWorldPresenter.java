@@ -101,7 +101,7 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
     public void startSimulation(WorldConfiguration config) throws InterruptedException {
         height = config.mapHeight();
         width = config.mapWidth();
-        Simulation simulation = new Simulation(config, this);
+        simulation = new Simulation(config, this);
         this.worldMap = simulation.getWorldMap();
         stats = new Statistics(worldMap);
         drawEmptyMap();
@@ -177,6 +177,15 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
     }
 
     public void pauseResume(ActionEvent actionEvent) {
+        if (paused) {
+            simulation.resume();
+            paused = false;
+            pauseResumeButton.setText("Pause");
+        } else {
+            simulation.pause();
+            paused = true;
+            pauseResumeButton.setText("Resume");
+        }
     }
 
     public void highlightDominantGrass(ActionEvent actionEvent) {

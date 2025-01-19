@@ -10,6 +10,9 @@ public class Simulation implements Runnable {
     private WorldConfiguration config;
     private AbstractWorldMap worldMap;
     private SimulationWorldPresenter presenter;
+    private boolean running = true;
+    private int dayCounter = 0;
+    private final Object lock = new Object();
     public Simulation(WorldConfiguration config, SimulationWorldPresenter presenter) {
         this.presenter = presenter;
         this.config = config;
@@ -32,6 +35,16 @@ public class Simulation implements Runnable {
     public void run() {
         int turnCounter = 0;
         while (true) {
+            synchronized (lock) {
+                while (!running) {
+                    System.out.println("st");
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
             worldMap.removeDeadAnimals();
             worldMap.moveAllAnimals();
             worldMap.eatPlants(config.plantEnergy());
@@ -50,6 +63,16 @@ public class Simulation implements Runnable {
                 throw new RuntimeException(e);
             }
             turnCounter++;
+        }
+    }
+    public void pause() {
+        running = false;
+    }
+
+    public void resume() {
+        synchronized (lock) {
+            running = true;
+            lock.notify();
         }
     }
 }
