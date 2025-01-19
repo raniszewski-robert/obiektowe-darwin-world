@@ -7,6 +7,7 @@ import agh.ics.oop.model.records.WorldConfiguration;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.BorderPane;
@@ -32,10 +33,12 @@ public class SimulationStartPresenter extends SimulationPresenter {
     @FXML private Spinner<Integer> fireFrequencySpinner;
     @FXML private Spinner<Integer> burnTimeSpinner;
     @FXML private VBox fireOptions;
+    @FXML private CheckBox saveToCSVCheckBox;
 
     @FXML
     private void onSimulationStartClicked() {
         try {
+            boolean saveEveryDayToCSV = saveToCSVCheckBox.isSelected();
             WorldConfiguration configuration = new WorldConfiguration(
                     mapHeightSpinner.getValue(),
                     mapWidthSpinner.getValue(),
@@ -52,7 +55,8 @@ public class SimulationStartPresenter extends SimulationPresenter {
                     animalGenotypeLengthSpinner.getValue(),
                     fireFrequencySpinner.getValue(),
                     burnTimeSpinner.getValue(),
-                    GenomeVariant.parser(genomeVariantChoice.getValue())
+                    GenomeVariant.parser(genomeVariantChoice.getValue()),
+                    saveEveryDayToCSV
             );
             openNewWindow(configuration);
         } catch (Exception e) {

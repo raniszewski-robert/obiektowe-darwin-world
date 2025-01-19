@@ -56,13 +56,14 @@ public class Simulation implements Runnable {
             worldMap.copulationAllAnimals(config.energyAllowingReproduction(), config.animalMutationMinimum(), config.animalMutationMaximum());
             worldMap.growPlants(config.plantDaily());
             worldMap.mapChanged();
-            presenter.updateStatistics();
+            presenter.updateStatistics(dayCounter, config.saveToCSV());
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
             turnCounter++;
+            dayCounter++;
         }
     }
     public void pause() {

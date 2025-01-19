@@ -18,5 +18,6 @@ public record WorldConfiguration(int mapHeight,
                                  int animalGenotypeLength,
                                  int fireFrequency,
                                  int burnTime,
-                                 GenomeVariant genomeVariant) {
+                                 GenomeVariant genomeVariant,
+                                 boolean saveToCSV) {
 }

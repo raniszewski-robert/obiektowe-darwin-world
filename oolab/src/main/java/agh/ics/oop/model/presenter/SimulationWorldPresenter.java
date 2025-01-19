@@ -23,10 +23,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class SimulationWorldPresenter extends SimulationPresenter implements MapChangeListener {
 
+    private CSVLogger csvLogger;
     public Button pauseResumeButton;
     public Label followedGenome;
     public Label followedEnergy;
@@ -103,9 +105,16 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
 
     private FileWriter writer = null;
 
-
-
     public void startSimulation(WorldConfiguration config) throws InterruptedException {
+        if (config.saveToCSV()) {
+            try {
+                // Inicjalizacja loggera CSV
+                csvLogger = new CSVLogger();
+            } catch (IOException e) {
+                System.out.println("Error creating CSV logger: " + e.getMessage());
+            }
+        }
+
         height = config.mapHeight();
         width = config.mapWidth();
         simulation = new Simulation(config, this);
@@ -114,8 +123,6 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
         drawEmptyMap();
         SimulationEngine simulationEngine = new SimulationEngine();
         simulationEngine.runAsyncInThreadPool(List.of(simulation));
-
-
     }
 
     public void drawEmptyMap(){
@@ -258,7 +265,11 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
         Platform.runLater(this::drawMap);
     }
 
-    public void updateStatistics() {
+    public void setSaveEveryDayToCSV(boolean saveEveryDayToCSV) {
+        this.saveEveryDayToCSV = saveEveryDayToCSV;
+    }
+
+    public void updateStatistics(int currDay, boolean saveToCSV) {
         int animalsCount = stats.countAnimals();
         int plantCount = stats.countPlants();
         double avgEnergy = stats.getAverageEnergy();
@@ -266,7 +277,16 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
         Genotype dominantGenotype = stats.getMostCommonGenotype();
         String avgAge = (String.format("%.2f", stats.getAverageLifeLength()));
         double avgOffspring = stats.getAverageChildrenCount();
+        System.out.println(saveToCSV);
+        System.out.println(csvLogger);
+
+        if (saveToCSV && csvLogger != null) {
+            csvLogger.logStatistics(currDay, animalsCount, plantCount, avgEnergy, freeSpaces,
+                    dominantGenotype != null ? dominantGenotype.toString() : null, avgAge, avgOffspring);
+        }
+
         Platform.runLater(() -> {
+            currentDay.setText("DAY: " + currDay);
             animalsCountLabel.setText(Integer.toString(animalsCount));
             plantCountLabel.setText(Integer.toString(plantCount));
             avgEnergyLabel.setText(Double.toString(avgEnergy));
