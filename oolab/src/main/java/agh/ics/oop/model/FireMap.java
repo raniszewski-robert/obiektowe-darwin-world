@@ -66,7 +66,8 @@ public class FireMap extends AbstractWorldMap{
             if (fire.isDead()) {
                 deadFires.add(fire);
                 Plant currPlant = currSquare.getPlant();
-                removePlant(currPlant);
+                plants.remove(currPlant);
+                currSquare.removePlant();
                 currSquare.removeFire();
                 firePositions.remove(fire.getPosition());
             }

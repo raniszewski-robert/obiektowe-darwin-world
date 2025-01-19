@@ -4,6 +4,7 @@ import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Fire;
 import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.elements.Square;
+import agh.ics.oop.model.enums.GenomeVariant;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,7 +13,7 @@ class FireMapTest {
 
     @Test
     public void testFireMap() {
-        FireMap map = new FireMap(10,10,2,10);
+        FireMap map = new FireMap(10,10, GenomeVariant.NORMAL, 2,10);
         Plant plant1 = new Plant(new Vector2d(5,5));
         map.addPlant(plant1);
         map.startFire();
@@ -38,7 +39,7 @@ class FireMapTest {
 
     @Test
     public void testFireSpread() {
-        FireMap map = new FireMap(10,10,10,10);
+        FireMap map = new FireMap(10,10, GenomeVariant.NORMAL, 10,10);
         Plant plant1 = new Plant(new Vector2d(5,5));
         map.addPlant(plant1);
         map.startFire();
@@ -68,7 +69,7 @@ class FireMapTest {
 
     @Test
     public void testFireKillsAnimals() {
-        FireMap map = new FireMap(10,10,10,10);
+        FireMap map = new FireMap(10,10, GenomeVariant.NORMAL, 10,10);
         Plant plant1 = new Plant(new Vector2d(5,5));
         Animal animal1 = new Animal(new Vector2d(5,5), 50, 5, 5);
         Square square1 = map.mapSquares.get(new Vector2d(5,5));
