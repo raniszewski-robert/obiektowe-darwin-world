@@ -17,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
@@ -83,14 +84,14 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
     private Image dirt = new Image("dirt.png");
     private Image grass = new Image("grass.png");
     private Image animal = new Image("animal.png");
-    private Image animal1 = new Image("animal1.png");
-    private Image animal2 = new Image("animal2.png");
-    private Image animal3 = new Image("animal3.png");
-    private Image animal4 = new Image("animal4.png");
-    private Image animal5 = new Image("animal5.png");
-    private Image animal6 = new Image("animal6.png");
-    private Image animal7 = new Image("animal7.png");
-    private Image animal8 = new Image("animal8.png");
+    private Image animal0 = new Image("animal_0.png");
+    private Image animal1 = new Image("animal_1.png");
+    private Image animal2 = new Image("animal_2.png");
+    private Image animal3 = new Image("animal_3.png");
+    private Image animal4 = new Image("animal_4.png");
+    private Image animal5 = new Image("animal_5.png");
+    private Image animal6 = new Image("animal_6.png");
+    private Image animal7 = new Image("animal_7.png");
     private Image fire = new Image("fire.png");
     private List<Image> animalImages = new ArrayList<>();
     private int energyForBeingFull;
@@ -118,6 +119,17 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
     }
 
     public void drawEmptyMap(){
+        zoomSlider.setValue(39);
+        zoomSlider.setMax(300);
+        rootPane.addEventFilter(KeyEvent.ANY, event -> {
+            if (event.getEventType() == KeyEvent.KEY_RELEASED && event.getCode() == KeyCode.SPACE) {
+                pauseResume();
+            } else {
+                movePane(event.getCode());
+            }
+            event.consume();
+        });
+
         for (int row = 0; row < height; row++) {
             List<ImageView> rowLabels = new ArrayList<>();
             for (int col = 0; col < width; col++) {
@@ -176,17 +188,15 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
             if (!AnimalsQueue.isEmpty()) {
                 Animal currAnimal = AnimalsQueue.poll();
                 int direction = currAnimal.getDirection();
-                System.out.println(direction);
-
                 switch (direction) {
-                    case 0 -> imageView.setImage(animal1);
-                    case 1 -> imageView.setImage(animal2);
-                    case 2 -> imageView.setImage(animal3);
-                    case 3 -> imageView.setImage(animal4);
-                    case 4 -> imageView.setImage(animal5);
-                    case 5 -> imageView.setImage(animal6);
-                    case 6 -> imageView.setImage(animal7);
-                    case 7 -> imageView.setImage(animal8);
+                    case 0 -> imageView.setImage(animal4);
+                    case 1 -> imageView.setImage(animal3);
+                    case 2 -> imageView.setImage(animal2);
+                    case 3 -> imageView.setImage(animal1);
+                    case 4 -> imageView.setImage(animal0);
+                    case 5 -> imageView.setImage(animal7);
+                    case 6 -> imageView.setImage(animal6);
+                    case 7 -> imageView.setImage(animal5);
                     default -> System.out.println("Unknown direction: " + direction);
                 }
             }
@@ -201,7 +211,7 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
     public void highlightPopularGenome(ActionEvent actionEvent) {
     }
 
-    public void pauseResume(ActionEvent actionEvent) {
+    public void pauseResume() {
         if (paused) {
             simulation.resume();
             paused = false;

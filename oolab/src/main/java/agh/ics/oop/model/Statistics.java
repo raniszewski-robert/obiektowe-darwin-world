@@ -42,8 +42,7 @@ public class Statistics {
     }
 
     public double getAverageEnergy(){
-        double average = this.map.getAllSquares().stream()
-                .flatMap(square -> square.getAnimals().stream())
+        double average = this.map.getAnimals().stream()
                 .filter(animal -> animal.getEnergy() > 0)
                 .mapToDouble(Animal::getEnergy)
                 .average().orElse(0.0);
@@ -60,10 +59,9 @@ public class Statistics {
     }
 
     public double getAverageChildrenCount(){
-        double average = map.getAllSquares().stream()
-                .flatMap(square -> square.getAnimals().stream())
-                .mapToDouble(Animal::getChildrenCount)
-                .average().orElse(0.0);
+        double average = map.getAnimals().stream()
+                    .mapToDouble(Animal::getChildrenCount)
+                    .average().orElse(0.0);
 
         return Math.round(average * 100.0) / 100.0;
     }

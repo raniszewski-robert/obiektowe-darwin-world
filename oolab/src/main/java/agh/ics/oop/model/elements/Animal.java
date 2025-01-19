@@ -55,14 +55,15 @@ public class Animal {
     }
 
     public void move(AbstractWorldMap map){
-        int currentDirection = this.direction;
-        int currentGenotypeIndex = genotype.getCurrentGenomeIndex();
-        int currentDirectionChange = genotype.getGenome().get(currentGenotypeIndex);
-        this.direction = (currentDirection + currentDirectionChange) % 8;
+
 
         moveInDirection(map);
 
         genotype.indexChange(map.getGenomeVariant());
+        int currentDirection = this.direction;
+        int currentGenotypeIndex = genotype.getCurrentGenomeIndex();
+        int currentDirectionChange = genotype.getGenome().get(currentGenotypeIndex);
+        this.direction = (currentDirection + currentDirectionChange) % 8;
         this.energy -= 1;
     }
 
