@@ -18,6 +18,18 @@
     <center>
         <HBox alignment="CENTER" spacing="30">
             <VBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Gotowe konfiguracje:" />
+                <ChoiceBox fx:id="configChoice">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="small_config" />
+                            <String fx:value="big_config" />
+                            <String fx:value="extreme_config" />
+                            <String fx:value="long_config" />
+                            <String fx:value="normal_config" />
+                        </FXCollections>
+                    </items>
+                </ChoiceBox>
                 <!-- Wymiary mapy -->
                 <Label text="Szerokość mapy:" />
                 <Spinner fx:id="mapWidthSpinner" editable="true" initialValue="50" max="1000" min="0" />

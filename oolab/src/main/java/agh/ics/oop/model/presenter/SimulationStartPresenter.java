@@ -1,21 +1,25 @@
 package agh.ics.oop.model.presenter;
 
+import agh.ics.oop.model.ConfigReader;
 import agh.ics.oop.model.SimulationApp;
 import agh.ics.oop.model.enums.GenomeVariant;
 import agh.ics.oop.model.enums.MapVariant;
 import agh.ics.oop.model.records.WorldConfiguration;
 import javafx.fxml.FXML;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Spinner;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+
+import javax.swing.*;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class SimulationStartPresenter extends SimulationPresenter {
+    @FXML public ChoiceBox<String> configChoice;
     @FXML private Spinner<Integer> mapWidthSpinner;
     @FXML private Spinner<Integer> mapHeightSpinner;
     @FXML private ChoiceBox<String> mapVariantChoice;
@@ -74,7 +78,7 @@ public class SimulationStartPresenter extends SimulationPresenter {
         SimulationApp.configureStage(additionalStage, viewRoot);
         additionalStage.show();
 
-        additionalPresenter.startSimulation(config);
+        additionalPresenter.startSimulation(config, additionalStage);
     }
 
     @FXML
@@ -87,5 +91,33 @@ public class SimulationStartPresenter extends SimulationPresenter {
                 fireOptions.setVisible(false); // Ukryj elementy związane z pożarami
             }
         });
+
+        configChoice.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            setChosenConfig(newValue);
+        });
     }
+
+    public void setChosenConfig(String value) {
+        ConfigReader configReader = new ConfigReader();
+        String file = "oolab/src/main/resources/configs/" + value + ".txt";
+        String [] configs = configReader.readFile(file);
+
+        mapWidthSpinner.getValueFactory().setValue(Integer.parseInt(configs[0]));
+        mapHeightSpinner.getValueFactory().setValue(Integer.parseInt(configs[1]));
+        animalStartSpinner.getValueFactory().setValue(Integer.parseInt(configs[2]));
+        animalStartEnergySpinner.getValueFactory().setValue(Integer.parseInt(configs[3]));
+        genomeVariantChoice.setValue(configs[4]);
+        mapVariantChoice.setValue(configs[5]);
+        fireFrequencySpinner.getValueFactory().setValue(Integer.parseInt(configs[6]));
+        burnTimeSpinner.getValueFactory().setValue(Integer.parseInt(configs[7]));
+        animalGenotypeLengthSpinner.getValueFactory().setValue(Integer.parseInt(configs[8]));
+        animalMutationMinimumSpinner.getValueFactory().setValue(Integer.parseInt(configs[9]));
+        animalMutationMaximumSpinner.getValueFactory().setValue(Integer.parseInt(configs[10]));
+        plantStartSpinner.getValueFactory().setValue(Integer.parseInt(configs[11]));
+        plantDailySpinner.getValueFactory().setValue(Integer.parseInt(configs[12]));
+        plantEnergySpinner.getValueFactory().setValue(Integer.parseInt(configs[13]));
+        energyAllowingReproductionSpinner.getValueFactory().setValue(Integer.parseInt(configs[14]));
+        animalEnergyUsedToReproduceSpinner.getValueFactory().setValue(Integer.parseInt(configs[15]));
+    }
+
 }
