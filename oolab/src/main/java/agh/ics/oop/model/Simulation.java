@@ -46,15 +46,15 @@ public class Simulation implements Runnable {
             }
             worldMap.removeDeadAnimals();
             worldMap.moveAllAnimals();
-            worldMap.eatPlants(config.plantEnergy());
-            worldMap.copulationAllAnimals(config.energyAllowingReproduction(), config.animalMutationMinimum(), config.animalMutationMaximum());
-            worldMap.growPlants(config.plantDaily());
             if (worldMap instanceof FireMap){
                 ((FireMap) worldMap).spreadFire();
                 if (turnCounter % config.fireFrequency() == 0) { // Execute every `fireFrequency` turns
                     ((FireMap) worldMap).startFire();
                 }
             }
+            worldMap.eatPlants(config.plantEnergy());
+            worldMap.copulationAllAnimals(config.energyAllowingReproduction(), config.animalMutationMinimum(), config.animalMutationMaximum());
+            worldMap.growPlants(config.plantDaily());
             worldMap.mapChanged();
             presenter.updateStatistics();
             try {
