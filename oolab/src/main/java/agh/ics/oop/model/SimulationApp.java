@@ -16,6 +16,8 @@ public class SimulationApp extends Application {
         SimulationStartPresenter presenter = loader.getController();
         configureStage(stage, viewRoot);
         stage.setTitle("Darwin World - Menu");
+        stage.setResizable(false);  // Zablokowanie zmiany rozmiaru okna
+        stage.setFullScreen(false);  // Ustawienie, by okno nie mogło przejść w tryb pełnoekranowy
         stage.show();
     }
 

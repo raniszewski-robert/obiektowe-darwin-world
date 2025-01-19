@@ -10,6 +10,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.io.IOException;
 
@@ -30,6 +31,7 @@ public class SimulationStartPresenter extends SimulationPresenter {
     @FXML private ChoiceBox<String> genomeVariantChoice;
     @FXML private Spinner<Integer> fireFrequencySpinner;
     @FXML private Spinner<Integer> burnTimeSpinner;
+    @FXML private VBox fireOptions;
 
     @FXML
     private void onSimulationStartClicked() {
@@ -69,5 +71,17 @@ public class SimulationStartPresenter extends SimulationPresenter {
         additionalStage.show();
 
         additionalPresenter.startSimulation(config);
+    }
+
+    @FXML
+    public void initialize() {
+        // Nasłuchiwanie zmian wyboru w mapVariantChoice
+        mapVariantChoice.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if ("Pożary".equals(newValue)) {
+                fireOptions.setVisible(true); // Pokaż elementy związane z pożarami
+            } else {
+                fireOptions.setVisible(false); // Ukryj elementy związane z pożarami
+            }
+        });
     }
 }
