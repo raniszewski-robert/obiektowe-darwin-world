@@ -19,6 +19,7 @@
         <HBox alignment="CENTER" spacing="30">
             <VBox alignment="CENTER_LEFT" spacing="10">
                 <Label text="Gotowe konfiguracje:" />
+                <HBox>
                 <ChoiceBox fx:id="configChoice">
                     <items>
                         <FXCollections fx:factory="observableArrayList">
@@ -30,6 +31,8 @@
                         </FXCollections>
                     </items>
                 </ChoiceBox>
+
+                </HBox>
                 <!-- Wymiary mapy -->
                 <Label text="Szerokość mapy:" />
                 <Spinner fx:id="mapWidthSpinner" editable="true" initialValue="50" max="1000" min="1" />
@@ -103,6 +106,7 @@
 
     <bottom>
         <HBox alignment="CENTER" spacing="10">
+            <CheckBox fx:id="saveConfig" text="Zapisz konfiguracje do txt" />
             <CheckBox fx:id="saveToCSVCheckBox" text="Zapisz dane do CSV" />
 
             <Button fx:id="startSimulationButton" onAction="#onSimulationStartClicked" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Rozpocznij Symulację" />

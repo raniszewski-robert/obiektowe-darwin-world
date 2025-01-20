@@ -15,11 +15,14 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import javax.swing.*;
-import java.io.IOException;
+import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
 public class SimulationStartPresenter extends SimulationPresenter {
     @FXML public ChoiceBox<String> configChoice;
+    public CheckBox saveConfig;
     @FXML private Spinner<Integer> mapWidthSpinner;
     @FXML private Spinner<Integer> mapHeightSpinner;
     @FXML private ChoiceBox<String> mapVariantChoice;
@@ -63,6 +66,10 @@ public class SimulationStartPresenter extends SimulationPresenter {
                     saveEveryDayToCSV
             );
             openNewWindow(configuration);
+
+            if(saveConfig.isSelected()) {
+                saveChosenConfig();
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
             showAlert("Błąd", "Nieprawidłowe dane", "Sprawdź wprowadzone wartości!", Alert.AlertType.ERROR);
@@ -120,4 +127,51 @@ public class SimulationStartPresenter extends SimulationPresenter {
         animalEnergyUsedToReproduceSpinner.getValueFactory().setValue(Integer.parseInt(configs[15]));
     }
 
+    public void saveChosenConfig() throws IOException {
+        StringBuilder configData = new StringBuilder();
+
+        // Pobieranie wartości z elementów UI
+        configData.append(configChoice.getValue()).append(",");
+        configData.append(saveConfig.isSelected()).append(",");
+        configData.append(mapWidthSpinner.getValue()).append(",");
+        configData.append(mapHeightSpinner.getValue()).append(",");
+        configData.append(animalStartSpinner.getValue()).append(",");
+        configData.append(animalStartEnergySpinner.getValue()).append(",");
+        configData.append(genomeVariantChoice.getValue()).append(",");
+        configData.append(mapVariantChoice.getValue()).append(",");
+
+        // Pożary (jeśli widoczne)
+        if (mapVariantChoice.getValue().equals("Pożary")) {
+            configData.append(fireFrequencySpinner.getValue()).append(",");
+            configData.append(burnTimeSpinner.getValue()).append(",");
+        } else {
+            configData.append(",,"); // Puste wartości, gdy opcja pożarów jest niewidoczna
+        }
+
+        configData.append(animalGenotypeLengthSpinner.getValue()).append(",");
+        configData.append(animalMutationMinimumSpinner.getValue()).append(",");
+        configData.append(animalMutationMaximumSpinner.getValue()).append(",");
+        configData.append(plantStartSpinner.getValue()).append(",");
+        configData.append(plantDailySpinner.getValue()).append(",");
+        configData.append(plantEnergySpinner.getValue()).append(",");
+        configData.append(energyAllowingReproductionSpinner.getValue()).append(",");
+        configData.append(animalEnergyUsedToReproduceSpinner.getValue());
+
+        File directory = new File("Configs");
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+
+        // Generowanie unikalnej nazwy pliku z timestampem
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String fileName = "Configs/simulation_configs_" + timestamp + ".txt";
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
+            writer.write(String.valueOf(configData));
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
