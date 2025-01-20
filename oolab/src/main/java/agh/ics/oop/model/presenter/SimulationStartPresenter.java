@@ -5,12 +5,15 @@ import agh.ics.oop.model.SimulationApp;
 import agh.ics.oop.model.enums.GenomeVariant;
 import agh.ics.oop.model.enums.MapVariant;
 import agh.ics.oop.model.records.WorldConfiguration;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -99,40 +102,69 @@ public class SimulationStartPresenter extends SimulationPresenter {
             }
         });
 
-        configChoice.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            setChosenConfig(newValue);
+        configChoice.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if ("wybierz z pliku...".equals(newValue)) {
+                    FileChooser fileChooser = new FileChooser();
+                    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Pliki tekstowe", "*.txt"));
+
+                    Stage stage = new Stage();
+                    File file = fileChooser.showOpenDialog(stage);
+
+                    // Sprawdź, czy plik został wybrany
+                    if (file != null) {
+                        // Zrób coś z wybranym plikiem
+                        setChosenConfig(file.getAbsolutePath());
+                    }
+                } else {
+                    setChosenConfig(newValue);
+                }
+            }
         });
     }
 
     public void setChosenConfig(String value) {
+        String file;
         ConfigReader configReader = new ConfigReader();
-        String file = "oolab/src/main/resources/configs/" + value + ".txt";
+
+        if(configChoice.getValue().equals("wybierz z pliku...")){
+            file = value;
+        }
+        else{
+        file = "oolab/src/main/resources/configs/" + value + ".txt";
+        }
         String [] configs = configReader.readFile(file);
 
-        mapWidthSpinner.getValueFactory().setValue(Integer.parseInt(configs[0]));
-        mapHeightSpinner.getValueFactory().setValue(Integer.parseInt(configs[1]));
-        animalStartSpinner.getValueFactory().setValue(Integer.parseInt(configs[2]));
-        animalStartEnergySpinner.getValueFactory().setValue(Integer.parseInt(configs[3]));
-        genomeVariantChoice.setValue(configs[4]);
-        mapVariantChoice.setValue(configs[5]);
-        fireFrequencySpinner.getValueFactory().setValue(Integer.parseInt(configs[6]));
-        burnTimeSpinner.getValueFactory().setValue(Integer.parseInt(configs[7]));
-        animalGenotypeLengthSpinner.getValueFactory().setValue(Integer.parseInt(configs[8]));
-        animalMutationMinimumSpinner.getValueFactory().setValue(Integer.parseInt(configs[9]));
-        animalMutationMaximumSpinner.getValueFactory().setValue(Integer.parseInt(configs[10]));
-        plantStartSpinner.getValueFactory().setValue(Integer.parseInt(configs[11]));
-        plantDailySpinner.getValueFactory().setValue(Integer.parseInt(configs[12]));
-        plantEnergySpinner.getValueFactory().setValue(Integer.parseInt(configs[13]));
-        energyAllowingReproductionSpinner.getValueFactory().setValue(Integer.parseInt(configs[14]));
-        animalEnergyUsedToReproduceSpinner.getValueFactory().setValue(Integer.parseInt(configs[15]));
+
+        try {
+            mapWidthSpinner.getValueFactory().setValue(Integer.parseInt(configs[0]));
+            mapHeightSpinner.getValueFactory().setValue(Integer.parseInt(configs[1]));
+            animalStartSpinner.getValueFactory().setValue(Integer.parseInt(configs[2]));
+            animalStartEnergySpinner.getValueFactory().setValue(Integer.parseInt(configs[3]));
+            genomeVariantChoice.setValue(configs[4]);
+            mapVariantChoice.setValue(configs[5]);
+            fireFrequencySpinner.getValueFactory().setValue(Integer.parseInt(configs[6]));
+            burnTimeSpinner.getValueFactory().setValue(Integer.parseInt(configs[7]));
+            animalGenotypeLengthSpinner.getValueFactory().setValue(Integer.parseInt(configs[8]));
+            animalMutationMinimumSpinner.getValueFactory().setValue(Integer.parseInt(configs[9]));
+            animalMutationMaximumSpinner.getValueFactory().setValue(Integer.parseInt(configs[10]));
+            plantStartSpinner.getValueFactory().setValue(Integer.parseInt(configs[11]));
+            plantDailySpinner.getValueFactory().setValue(Integer.parseInt(configs[12]));
+            plantEnergySpinner.getValueFactory().setValue(Integer.parseInt(configs[13]));
+            energyAllowingReproductionSpinner.getValueFactory().setValue(Integer.parseInt(configs[14]));
+            animalEnergyUsedToReproduceSpinner.getValueFactory().setValue(Integer.parseInt(configs[15]));
+        } catch (NumberFormatException e) {
+            System.out.println("NIEPRAWIDŁOWY TEXT!!");
+            showAlert("Błąd", "Nieprawidłowe dane", "Sprawdź wprowadzone wartości w pliku!", Alert.AlertType.ERROR);
+            configChoice.getSelectionModel().clearSelection();
+        }
     }
 
-    public void saveChosenConfig() throws IOException {
+    public void saveChosenConfig() throws IOException{
         StringBuilder configData = new StringBuilder();
 
         // Pobieranie wartości z elementów UI
-        configData.append(configChoice.getValue()).append(",");
-        configData.append(saveConfig.isSelected()).append(",");
         configData.append(mapWidthSpinner.getValue()).append(",");
         configData.append(mapHeightSpinner.getValue()).append(",");
         configData.append(animalStartSpinner.getValue()).append(",");

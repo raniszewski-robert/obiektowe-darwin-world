@@ -28,6 +28,7 @@
                             <String fx:value="extreme_config" />
                             <String fx:value="long_config" />
                             <String fx:value="normal_config" />
+                            <String fx:value="wybierz z pliku..." />
                         </FXCollections>
                     </items>
                 </ChoiceBox>
