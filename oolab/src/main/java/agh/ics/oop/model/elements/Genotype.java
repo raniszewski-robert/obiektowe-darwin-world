@@ -31,6 +31,13 @@ public class Genotype {
         return genome;
     }
 
+    public void changeGenome(int index, int value){
+        List<Integer> tempGenome = new ArrayList<>(this.genome.subList(0, index));
+        tempGenome.add(value);
+        tempGenome.addAll(this.genome.subList(index + 1, this.genome.size()));
+        this.genome = tempGenome;
+    }
+
     public int getCurrentGenomeIndex() {
         return currentGenomeIndex;
     }

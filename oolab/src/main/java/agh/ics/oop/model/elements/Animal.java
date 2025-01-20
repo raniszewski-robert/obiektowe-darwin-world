@@ -97,10 +97,12 @@ public class Animal {
         int y = map.getCurrentBounds().upperRight().getY();
         int x = map.getCurrentBounds().upperRight().getX() + 1;
         Vector2d moveVector;
+        int currInd = this.getGenotype().getCurrentGenomeIndex();
         switch (this.direction) {
             case 0 -> {
                 if ((this.position.getY() + 1) > y) {
                     this.direction = 4;
+                    this.getGenotype().changeGenome(currInd, 4);
                 } else {
                     moveVector = this.position.add(new Vector2d(0, 1));
                     this.position = moveVector;
@@ -109,6 +111,7 @@ public class Animal {
             case 1 -> {
                 if ((this.position.getY() + 1) > y) {
                     this.direction = 4;
+                    this.getGenotype().changeGenome(currInd, 6);
                 } else {
                     moveVector = this.position.add(new Vector2d(1, 1));
                     moveVector = new Vector2d(moveVector.getX() % x, moveVector.getY());
@@ -123,6 +126,7 @@ public class Animal {
             case 3 -> {
                 if ((this.position.getY() - 1) < 0) {
                     this.direction = 0;
+                    this.getGenotype().changeGenome(currInd, 7);
                 } else {
                     moveVector = this.position.add(new Vector2d(1, -1));
                     moveVector = new Vector2d(moveVector.getX() % x, moveVector.getY());
@@ -132,6 +136,7 @@ public class Animal {
             case 4 -> {
                 if ((this.position.getY() - 1) < 0) {
                     this.direction = 0;
+                    this.getGenotype().changeGenome(currInd, 0);
                 } else {
                     moveVector = this.position.add(new Vector2d(0, -1));
                     this.position = moveVector;
@@ -140,6 +145,7 @@ public class Animal {
             case 5 -> {
                 if ((this.position.getY() - 1) < 0) {
                     this.direction = 0;
+                    this.getGenotype().changeGenome(currInd, 1);
                 } else {
                     moveVector = this.position.add(new Vector2d(-1, -1));
                     moveVector = new Vector2d((moveVector.getX()+x) % x, moveVector.getY());
@@ -154,6 +160,7 @@ public class Animal {
             case 7 -> {
                 if ((this.position.getY() + 1) > y) {
                     this.direction = 4;
+                    this.getGenotype().changeGenome(currInd, 3);
                 } else {
                     moveVector = this.position.add(new Vector2d(-1, 1));
                     moveVector = new Vector2d((moveVector.getX()+x) % x, moveVector.getY());
@@ -193,11 +200,16 @@ public class Animal {
     public Set<Animal> getDescendants() {
         Set<Animal> descendantSet = new HashSet<>();
 
-        for (Animal child : children) {
-            descendantSet.add(child);
-            descendantSet.addAll(child.getDescendants());
+        try {
+            for (Animal child : children) {
+                descendantSet.add(child);
+                descendantSet.addAll(child.getDescendants());
+                return descendantSet;
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-        return descendantSet;
+        return new HashSet<>();
     }
     public int getDescendantNumber(){
         Set<Animal> descendants = getDescendants();
@@ -205,6 +217,5 @@ public class Animal {
             return descendants.size();
         }
         return 0;
-
     }
 }
