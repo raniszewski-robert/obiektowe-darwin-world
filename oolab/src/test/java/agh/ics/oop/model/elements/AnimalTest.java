@@ -85,7 +85,9 @@ class AnimalTest {
     @Test
     void testGetDescendantNumber() {
         Animal otherParent = new Animal(new Vector2d(0, 0), 100, genotype, 20);
+        assertEquals(0, animal.getDescendantNumber());
         Animal child1 = animal.createChild(otherParent, 1, 3);
+        assertEquals(1, animal.getDescendantNumber());
         Animal child2 = animal.createChild(otherParent, 1, 3);
 
         assertEquals(2, animal.getDescendantNumber());

@@ -204,8 +204,8 @@ public class Animal {
             for (Animal child : children) {
                 descendantSet.add(child);
                 descendantSet.addAll(child.getDescendants());
-                return descendantSet;
             }
+            return descendantSet;
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
