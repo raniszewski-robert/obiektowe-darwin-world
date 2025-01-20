@@ -19,6 +19,7 @@
         <HBox alignment="CENTER" spacing="30">
             <VBox alignment="CENTER_LEFT" spacing="10">
                 <Label text="Gotowe konfiguracje:" />
+                <HBox>
                 <ChoiceBox fx:id="configChoice">
                     <items>
                         <FXCollections fx:factory="observableArrayList">
@@ -30,6 +31,8 @@
                         </FXCollections>
                     </items>
                 </ChoiceBox>
+                <CheckBox fx:id="saveConfig" text="Zapisz dane do CSV" />
+                </HBox>
                 <!-- Wymiary mapy -->
                 <Label text="Szerokość mapy:" />
                 <Spinner fx:id="mapWidthSpinner" editable="true" initialValue="50" max="1000" min="1" />
