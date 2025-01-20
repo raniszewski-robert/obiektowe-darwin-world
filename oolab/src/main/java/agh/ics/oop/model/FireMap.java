@@ -20,63 +20,74 @@ public class FireMap extends AbstractWorldMap{
     }
 
     public void startFire() {
-        if (!plants.isEmpty()) {
-            Random random = new Random();
-            int randomIndex = random.nextInt(plants.size()); // Wybierz losowy indeks
-            Plant randomPlant = plants.get(randomIndex);
-            Vector2d position = randomPlant.getPosition();
-            Square square = mapSquares.get(position);
-            if (!firePositions.contains(position)) {
-                Fire fire = new Fire(position, burnTime);
-                square.addFire(fire);
-                fires.add(fire);
-                firePositions.add(position);
+        try {
+            if (!plants.isEmpty()) {
+                Random random = new Random();
+                int randomIndex = random.nextInt(plants.size()); // Wybierz losowy indeks
+                Plant randomPlant = plants.get(randomIndex);
+                Vector2d position = randomPlant.getPosition();
+                Square square = mapSquares.get(position);
+                if (!firePositions.contains(position)) {
+                    Fire fire = new Fire(position, burnTime);
+                    square.addFire(fire);
+                    fires.add(fire);
+                    firePositions.add(position);
+                }
             }
+        } catch (Exception e) {
+            throw new RuntimeException("Error occurred while starting a fire: " + e.getMessage(), e);
         }
     }
 
     public void spreadFire() {
         List<Fire> newFires = new ArrayList<>();
         List<Fire> deadFires = new ArrayList<>();
-        for (Fire fire : fires) {
-            Vector2d position = fire.getPosition();
-            List <Vector2d> neighbors = getNeighbors(position);
+        try {
+            for (Fire fire : fires) {
+                Vector2d position = fire.getPosition();
+                List<Vector2d> neighbors = getNeighbors(position);
 
-            for (Vector2d neighbor : neighbors) {
-                Square square = mapSquares.get(neighbor);
-                if (square.hasPlant() && !square.onFire() && !firePositions.contains(neighbor)) {
-                    newFires.add(new Fire(neighbor, burnTime));
-                    square.addFire(new Fire(neighbor, burnTime));
-                    firePositions.add(neighbor);
+                for (Vector2d neighbor : neighbors) {
+                    Square square = mapSquares.get(neighbor);
+                    if (square.hasPlant() && !square.onFire() && !firePositions.contains(neighbor)) {
+                        newFires.add(new Fire(neighbor, burnTime));
+                        square.addFire(new Fire(neighbor, burnTime));
+                        firePositions.add(neighbor);
+                    }
+                }
+
+                Square currSquare = mapSquares.get(position);
+
+                if (currSquare.getAnimals() != null) {
+                    for (Animal animal : currSquare.getAnimals()) {
+                        this.animals.remove(animal);
+                        this.getDeadAnimals().add(animal);
+                        currSquare.removeAnimal(animal);
+
+                    }
+                }
+
+                fire.tick();
+                if (fire.isDead()) {
+                    deadFires.add(fire);
+                    Plant currPlant = currSquare.getPlant();
+                    plants.remove(currPlant);
+                    currSquare.removePlant();
+                    currSquare.removeFire();
+                    firePositions.remove(fire.getPosition());
                 }
             }
-
-            Square currSquare = mapSquares.get(position);
-
-            if (currSquare.getAnimals() != null) {
-                for (Animal animal : currSquare.getAnimals()) {
-                    this.animals.remove(animal);
-                    this.getDeadAnimals().add(animal);
-                    currSquare.removeAnimal(animal);
-
-                }
-            }
-
-            fire.tick();
-            if (fire.isDead()) {
-                deadFires.add(fire);
-                Plant currPlant = currSquare.getPlant();
-                plants.remove(currPlant);
-                currSquare.removePlant();
-                currSquare.removeFire();
-                firePositions.remove(fire.getPosition());
-            }
+            fires.removeAll(deadFires);
+            fires.addAll(newFires);
+        } catch (Exception e) {
+            throw new RuntimeException("Error occurred while spreading a fire: " + e.getMessage(), e);
         }
-        fires.removeAll(deadFires);
-        fires.addAll(newFires);
     }
 
     private List<Vector2d> getNeighbors(Vector2d position) {
+        if (!isInMap(position)) {
+            throw new IllegalArgumentException("Position " + position + " is not within map bounds.");
+        }
         List<Vector2d> neighbors = new ArrayList<>();
         Vector2d up = position.add(new Vector2d(0, 1));
         Vector2d right = position.add(new Vector2d(1, 0));
@@ -90,5 +101,4 @@ public class FireMap extends AbstractWorldMap{
 
         return neighbors;
     }
-
 }

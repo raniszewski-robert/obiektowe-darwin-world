@@ -104,6 +104,9 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     public void growPlants(int numberOfPlants) {
+        if (numberOfPlants <= 0) {
+            throw new IllegalArgumentException("Number of plants to grow must be positive.");
+        }
         if (freeFields < numberOfPlants) {
             numberOfPlants = freeFields;
         }
@@ -162,6 +165,9 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     public void moveAnimal(Animal animal){
+        if (!isInMap(animal.getPosition())) {
+            throw new IllegalArgumentException("Animal position " + animal.getPosition() + " is outside of map bounds.");
+        }
         Square oldSquare = squareAt(animal.getPosition());
         animal.move(this);
         oldSquare.removeAnimal(animal);
@@ -196,6 +202,9 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     public void copulationAllAnimals(int energyAllowingCopulation, int minMutation, int maxMutation) {
+        if (energyAllowingCopulation <= 0 || minMutation < 0 || maxMutation < minMutation) {
+            throw new IllegalArgumentException("Invalid parameters for copulation.");
+        }
         for(Square square: this.mapSquares.values()){
             if(square.getAnimals().size()>1){
                 PriorityQueue<Animal> currAnimals = new PriorityQueue<>(square.getAnimalsAsQueue());

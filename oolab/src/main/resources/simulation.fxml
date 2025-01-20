@@ -47,7 +47,7 @@
                 <Button fx:id="popularGenomeButton" onAction="#highlightPopularGenome" text="Show Popular Genome" />
             </HBox>
             <HBox spacing="4" styleClass="vboxButton">
-                <Button fx:id="pauseResumeButton" onAction="#pauseResume" text="Pause/Resume" />
+                <Button fx:id="pauseResumeButton" onAction="#pauseResume" text="Pause" />
             </HBox>
             <HBox spacing="4" styleClass="vboxButton">
                 <Button fx:id="highlightGrassButton" onAction="#highlightDominantGrassButton" text="Highlight Grass Zones" />

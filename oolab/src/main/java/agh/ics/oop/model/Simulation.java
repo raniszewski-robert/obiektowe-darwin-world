@@ -10,7 +10,7 @@ public class Simulation implements Runnable {
     private SimulationWorldPresenter presenter;
     private boolean running = true;
     private boolean closedWindow = false;
-    private int dayCounter = 0;
+    private int dayCounter = 1;
     private final Object lock = new Object();
     public Simulation(WorldConfiguration config, SimulationWorldPresenter presenter) {
         this.presenter = presenter;
