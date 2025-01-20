@@ -4,6 +4,7 @@ package agh.ics.oop.model;
 import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.elements.Plant;
 import agh.ics.oop.model.elements.Square;
+import agh.ics.oop.model.enums.GenomeVariant;
 import agh.ics.oop.model.interfaces.MapChangeListener;
 import agh.ics.oop.model.interfaces.WorldMap;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ public class AbstractWorldMapTest {
     // Implementacja klasy do testowania abstrakcyjnej klasy
     private static class TestWorldMap extends AbstractWorldMap {
         public TestWorldMap(int width, int height) {
-            super(width, height);
+            super(width, height, GenomeVariant.NORMAL);
         }
     }
 
@@ -38,7 +39,7 @@ public class AbstractWorldMapTest {
 
     @Test
     public void testPlaceAnimalOnMap() {
-        AbstractWorldMap map = new GlobeMap(10, 10);
+        AbstractWorldMap map = new GlobeMap(10, 10, GenomeVariant.NORMAL);
         Vector2d position = new Vector2d(3, 3);
         Animal animal = new Animal(position, 100, 5, 5);
 
@@ -126,7 +127,7 @@ public class AbstractWorldMapTest {
         map.addAnimal(parent1);
         map.addAnimal(parent2);
 
-        map.copulationAllAnimals(50);
+        map.copulationAllAnimals(50, 0, 2);
 
         assertTrue(map.getAnimals().size() > 2);
     }
