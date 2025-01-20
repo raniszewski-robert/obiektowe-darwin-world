@@ -31,7 +31,6 @@
                         </FXCollections>
                     </items>
                 </ChoiceBox>
-
                 </HBox>
                 <!-- Wymiary mapy -->
                 <Label text="Szerokość mapy:" />
