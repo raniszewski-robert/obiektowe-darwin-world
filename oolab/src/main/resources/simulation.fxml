@@ -77,7 +77,7 @@
                 <Label fx:id="clickedAge" />
             </HBox>
             <HBox spacing="4" styleClass="vboxStat">
-                <Label fx:id="clickedDayOfDeath" text="ALIVE"/>
+                <Label fx:id="clickedDayOfDeath"/>
             </HBox>
             <HBox prefWidth="0.0" styleClass="vboxStat" GridPane.columnIndex="0" GridPane.halignment="CENTER">
                 <Label text="-------------" />

@@ -32,14 +32,14 @@
                 </ChoiceBox>
                 <!-- Wymiary mapy -->
                 <Label text="Szerokość mapy:" />
-                <Spinner fx:id="mapWidthSpinner" editable="true" initialValue="50" max="1000" min="0" />
+                <Spinner fx:id="mapWidthSpinner" editable="true" initialValue="50" max="1000" min="1" />
                 <Label text="Wysokość mapy:" />
-                <Spinner fx:id="mapHeightSpinner" editable="true" initialValue="30" max="1000" min="0" />
+                <Spinner fx:id="mapHeightSpinner" editable="true" initialValue="30" max="1000" min="1" />
                 <!-- Zwierzaki -->
                 <Label text="Startowa liczba zwierząt:" />
                 <Spinner fx:id="animalStartSpinner" editable="true" initialValue="100" max="1000" min="0" />
                 <Label text="Energia startowa zwierząt:" />
-                <Spinner fx:id="animalStartEnergySpinner" editable="true" initialValue="20" max="1000" min="0" />
+                <Spinner fx:id="animalStartEnergySpinner" editable="true" initialValue="20" max="1000" min="1" />
 
                 <!-- Wariant genomu -->
                 <Label text="Wariant genomu zwierząt:" />
@@ -64,16 +64,16 @@
                 <!-- Pożary (domyślnie ukryte) -->
                 <VBox fx:id="fireOptions" visible="false">
                     <Label text="Częstotliwość pożarów (w turach):" />
-                    <Spinner fx:id="fireFrequencySpinner" editable="true" initialValue="10" max="1000" min="0" />
+                    <Spinner fx:id="fireFrequencySpinner" editable="true" initialValue="10" max="1000" min="1" />
                     <Label text="Czas trwania pożaru (w turach):" />
-                    <Spinner fx:id="burnTimeSpinner" editable="true" initialValue="10" max="1000" min="0" />
+                    <Spinner fx:id="burnTimeSpinner" editable="true" initialValue="10" max="1000" min="1" />
                 </VBox>
             </VBox>
 
             <VBox alignment="CENTER_LEFT" spacing="10">
                 <!-- Genotyp i mutacje -->
                 <Label text="Długość genomu:" />
-                <Spinner fx:id="animalGenotypeLengthSpinner" editable="true" initialValue="5" max="100" min="0" />
+                <Spinner fx:id="animalGenotypeLengthSpinner" editable="true" initialValue="5" max="100" min="1" />
                 <Label text="Minimalna liczba mutacji:" />
                 <Spinner fx:id="animalMutationMinimumSpinner" editable="true" initialValue="0" max="100" min="0" />
                 <Label text="Maksymalna liczba mutacji:" />
@@ -89,7 +89,7 @@
 
                 <!-- Energia roślin -->
                 <Label text="Energia zjedzonej rośliny:" />
-                <Spinner fx:id="plantEnergySpinner" editable="true" initialValue="20" max="1000" min="0" />
+                <Spinner fx:id="plantEnergySpinner" editable="true" initialValue="20" max="1000" min="1" />
 
 
                 <!-- Energia zwierząt -->
