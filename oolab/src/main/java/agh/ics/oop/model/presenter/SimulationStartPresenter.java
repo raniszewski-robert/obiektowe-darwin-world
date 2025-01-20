@@ -49,6 +49,10 @@ public class SimulationStartPresenter extends SimulationPresenter {
     private void onSimulationStartClicked() {
         try {
             boolean saveEveryDayToCSV = saveToCSVCheckBox.isSelected();
+            if(animalMutationMaximumSpinner.getValue() < animalMutationMinimumSpinner.getValue()) {
+                showAlert("Błąd", "Nieprawidłowe dane", "Minimalna liczba mutacji musi być mniejsza od maksymalnej!", Alert.AlertType.ERROR);
+                return;
+            }
             WorldConfiguration configuration = new WorldConfiguration(
                     mapHeightSpinner.getValue(),
                     mapWidthSpinner.getValue(),
