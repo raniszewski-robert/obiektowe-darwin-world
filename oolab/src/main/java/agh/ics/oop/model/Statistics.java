@@ -70,6 +70,25 @@ public class Statistics {
         return Math.round(average * 100.0) / 100.0;
     }
 
+    public static List<Integer> convertGenome(Genotype genotype) {
+
+        return genotype.getGenome().stream()
+                .map(value -> {
+                    switch (value) {
+                        case 5: return 7;
+                        case 2: return 2;
+                        case 1: return 3;
+                        case 7: return 5;
+                        case 3: return 1;
+                        case 0: return 4;
+                        case 4: return 0;
+                        case 6: return 6;
+                        default: throw new IllegalArgumentException("Unexpected value: " + value);
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
     @Override
     public String toString() {
         return "count animals: " + countAnimals() + "\n" + "count plants" + countPlants() + "\n"

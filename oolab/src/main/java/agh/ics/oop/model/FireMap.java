@@ -61,6 +61,7 @@ public class FireMap extends AbstractWorldMap{
                 if (currSquare.getAnimals() != null) {
                     for (Animal animal : currSquare.getAnimals()) {
                         this.animals.remove(animal);
+                        animal.setEnergy(0);
                         this.getDeadAnimals().add(animal);
                         currSquare.removeAnimal(animal);
 

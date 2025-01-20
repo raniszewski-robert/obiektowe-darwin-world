@@ -18,7 +18,7 @@ public class Genotype {
         this.genome = new ArrayList<>();
         this.genomeSize = genomeSize;
         for (int i = 0; i < genomeSize; i++){
-            this.genome.add((int) round(Math.random()*8));
+            this.genome.add((int) round(Math.random()*7));
         }
         this.currentGenomeIndex = (int) round(Math.random()*(genomeSize-1));
     }

@@ -189,6 +189,7 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
         imageView.setEffect(colorAdjust);
     }
     public void setSelectedAnimalColor(){
+        if(selectedAnimal == null){return;}
         int y = selectedAnimal.getPosition().getY();
         int x = selectedAnimal.getPosition().getX();
         ImageView imageView = gridLabels.get(y).get(x);
@@ -291,7 +292,7 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
         if(animal == null) return;
         clickedHeader.setText("Animal at: " + animal.getPosition());
         Genotype genotype = animal.getGenotype();
-        clickedGenome.setText("Genome:" + highlightElement(genotype.getGenome(), genotype.getCurrentGenomeIndex() ) );
+        clickedGenome.setText("Genome:" + highlightElement(Statistics.convertGenome(genotype), genotype.getCurrentGenomeIndex() ) );
         clickedEnergy.setText("Energy: " + animal.getEnergy());
         clickedEatenGrass.setText("Eaten plant: " + animal.getPlantCount());
         clickedChildrenNumber.setText("Children number: " + animal.getChildrenCount());
@@ -417,7 +418,7 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
             avgEnergyLabel.setText(Double.toString(avgEnergy));
             freeSpaceLabel.setText(Integer.toString(freeSpaces));
             if (dominantGenotype != null) {
-                dominantGenotypePositionsLabel.setText(dominantGenotype.toString());
+                dominantGenotypePositionsLabel.setText(Statistics.convertGenome(dominantGenotype).toString());
             }
             avgAgeLabel.setText(avgAge);
             avgOffspringLabel.setText(Double.toString(avgOffspring));
@@ -436,4 +437,5 @@ public class SimulationWorldPresenter extends SimulationPresenter implements Map
         }
         return result;
     }
+
 }

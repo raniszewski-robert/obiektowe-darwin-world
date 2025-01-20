@@ -58,10 +58,8 @@ public class Animal {
         moveInDirection(map);
 
         genotype.indexChange(map.getGenomeVariant());
-        int currentDirection = this.direction;
         int currentGenotypeIndex = genotype.getCurrentGenomeIndex();
-        int currentDirectionChange = genotype.getGenome().get(currentGenotypeIndex);
-        this.direction = (currentDirection + currentDirectionChange) % 8;
+        this.direction = genotype.getGenome().get(currentGenotypeIndex);
         this.energy -= 1;
     }
 
